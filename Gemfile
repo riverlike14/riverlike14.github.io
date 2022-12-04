@@ -1,2 +1,6 @@
 source "https://rubygems.org"
-gemspec
+
+# 'jekyll serve' dependencies
+gem "jekyll"
+gem "minimal-mistakes-jekyll"
+gem "webrick"
