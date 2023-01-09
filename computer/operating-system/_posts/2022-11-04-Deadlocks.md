@@ -112,6 +112,10 @@ Deadlock의 4가지 필요조건
 
 ## Resource-Allocation Graph
 
+<p align="center">
+  <img alt="Resource-allocation graph" src="https://imgur.com/VZgtQ94.png" />
+</p>
+
 System Resource-Allocation Graph
 - 방향 그래프.
 - 정점은 쓰레드 또는 자원 두 종류로 구분.
