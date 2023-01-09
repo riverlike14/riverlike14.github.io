@@ -28,7 +28,9 @@ title: "[운영체제] Processes(진행중)"
 
 ## 프로세스 상태
 
-![프로세스 상태](https://imgur.com/USXMxSb.png)
+<p align="center">
+  <img alt="프로세스 상태" src="https://imgur.com/USXMxSb.png" />
+</p>
 
 - New: 프로세스 생성.
 - Running: 명령어가 실행중.
