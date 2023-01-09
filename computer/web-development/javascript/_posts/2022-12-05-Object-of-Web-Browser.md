@@ -64,7 +64,9 @@ CSS 렌더링은 DOM 트리 구축 과정과 함께 실행됨.
 4. DOM의 각 노드를 렌더 트리의 스타일 정보를 바탕으로 그림.
 - HTML 문서를 읽어 들이는 과정에서 단계적으로 동시에 실행.
 
-![렌더링의 흐름](https://i.imgur.com/G2FvCKo.png)
+<p align="center">
+  <img alt="렌더링의 흐름" src="https://i.imgur.com/G2FvCKo.png" />
+</p>
 
 렌더 트리를 구축해서 배치하고 그리는 과정이 실행되는 경우
 - 처음 리소스를 읽어 들일 때.
