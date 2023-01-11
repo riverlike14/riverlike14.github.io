@@ -104,8 +104,46 @@ long mult2(long a, long b) {
   - 명령어가 저장된 주소 값(0~d &rarr; 11ab~11b8)이 다름.
   - `call`이 실행하는 명령어 주소가 `mult2`로 바뀜.
 
-# Data Formats
-# Accessing Information
+# 데이터 형식
+
+인텔 아키텍처에서 사용하는 데이터 용어
+- `word`: 16비트 데이터
+- `double words`: 32비트 데이터
+- `quad words`: 64비트 데이터
+
+|C declaration|Intel data type|Assembly-code suffix|Size(bytes)|
+|:-:|:-:|:-:|:-:|
+|`char`|Byte|`b`|1|
+|`short`|Word|`w`|2|
+|`int`|Double word|`l`|4|
+|`long`|Quad word|`q`|8|
+|`char *`|Quad word|`q`|8|
+|`float`|Single Precision|`s`|4|
+|`double`|Double Precision|`l`|8|
+
+- GCC에 의해 만들어진 어셈블리 코드는 피연산자의 크기를 나타내는 접미사를 포함.
+- `int`와 `double`의 접미사 모두 `l`이지만 서로 완전히 다른 명령어 집합에서 사용되기 때문에 혼동의 염려는 없음.
+
+
+# 정보 접근
+
+![정수 레지스터](https://i.imgur.com/1rYUGij.png)
+
+- x86-64 CPU는 위 16가지의 레지스터를 포함.
+- 명령어는 low-order 레지스터에 저장된 크기가 다른 데이터에도 실행 가능.
+- 4바이트 데이터를 생성하는 명령어는 남은 4바이트를 0으로 설정.
+- 레지스터마다 고유의 역할이 있음.
+  - stack pointer(`%rsp`): 런타임 스택의 마지막 위치를 가리킴.
+  - 어떤 명령어들은 특정한 레지스터를 읽음.
+
+## Operand Specifiers
+
+## Data Movement Instructions
+
+## Data Movement Example
+
+## Pushing and Popping Stack Data
+
 # Arithmetic and Logical Operations
 # Control
 # Procedures
