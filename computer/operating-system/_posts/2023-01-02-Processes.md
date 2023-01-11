@@ -63,9 +63,54 @@ title: "[운영체제] Processes(진행중)"
 
 ## Context Switch
 
-# Operations on Processes
+# 프로세스에 관한 Operation
 
-## Process Creation
+프로세스는 동시성(concurrency)이 보장되어야 하고 동적으로 생성 및 종료되어야 함.
+
+## 프로세스 생성
+
+한 프로세스는 새로운 프로세스들을 생성할 수 있음.
+- 생성된 프로세스들은 부모-자식 관계를 형성.
+- 프로세스는 고유한 **PID(Process Identifier)**를 부여받음.
+- 리눅스에서 루트 프로세스는 `systemd`.
+
+자식 프로세스의 자원 할당.
+- 운영체제로부터 새로운 자원을 할당받을 수 있음.
+- 부모 프로세스와 자원을 공유할 수 있음.
+- 부모 프로세스가 받은 입력 데이터도 자식 프로세스에게 전달 가능.
+
+프로세스 생성 후 실행에 관한 경우의 수.
+- 부모 프로세스와 자식 프로세스가 동시적으로 실행.
+- 자식 프로세스가 특정 작업을 마칠 때까지 부모 프로세스 대기.
+
+프로세스 생성 후 주소 공간에 관한 경우의 수.
+- 자식 프로세스가 부모 프로세스를 그대로 복사.(`fork`)
+- 자식 프로세스는 새로운 프로그램을 불러옴.(`exec`)
+
+```c
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    pid_t pid;
+
+    // fork a child process
+    pid = fork();
+
+    if (pid == 0) { // child process
+        execlp("/bin/ls", "ls", NULL);
+    } else { // parent process, pid > 0
+        wait(NULL); // wait for the child to complete
+        printf("Child Complete");
+    }
+
+    return 0;
+}
+```
+- UNIX `fork()` 시스템 호출을 활용한 새로운 프로세스 생성.
+- `fork()`는 호출한 프로세스를 새로운 메모리에 복사.
+- `exec()`는 호출된 프로그램이 메모리에 남음.
 
 ## Process Termination
 
