@@ -112,7 +112,7 @@ long mult2(long a, long b) {
 - `quad words`: 64비트 데이터
 
 |C declaration|Intel data type|Assembly-code suffix|Size(bytes)|
-|:-:|:-:|:-:|:-:|
+|:-|:-|:-:|:-:|
 |`char`|Byte|`b`|1|
 |`short`|Word|`w`|2|
 |`int`|Double word|`l`|4|
@@ -136,7 +136,28 @@ long mult2(long a, long b) {
   - stack pointer(`%rsp`): 런타임 스택의 마지막 위치를 가리킴.
   - 어떤 명령어들은 특정한 레지스터를 읽음.
 
-## Operand Specifiers
+## 피연산자 형식
+
+|Type|Form|Operand value|Name|
+|:-:|:-|:-|:-|
+|Immediate|$Imm|Imm|Immediate|
+|Register|$r_a$|R[$r_a$]|Register|
+|Memory|Imm|M[Imm]|Absolute|
+|Memory|($r_a$)|M[R[$r_a$]]|Indirect|
+|Memory|Imm($r_b$)|M[Imm + R[$r_b$]]|Base + displacement|
+|Memory|($r_b$,$r_i$)|M[R[$r_b$] + R[$r_i$]]|Indexed|
+|Memory|Imm($r_b$,$r_i$)|M[Imm + R[$r_b$] + R[$r_i$]]|Indexed|
+|Memory|(,$r_i$,s)|M[R[$r_i$] &middot; s]|Scaled indexed|
+|Memory|Imm(,$r_i$,s)|M[Imm + R[$r_i$] &middot; s]|Scaled indexed|
+|Memory|($r_b$,$r_i$,s)|M[R[$r_b$] + R[$r_i$] &middot; s]|Scaled indexed|
+|Memory|Imm($r_b$,$r_i$,s)|M[Imm + R[$r_b$] + R[$r_i$] &middot; s]|Scaled indexed|
+
+- 상수, 레지스터 또는 메모리에서 데이터를 읽고 레지스터 또는 메모리에 데이터 저장.
+- *상수(Immediate)*: `$`표시 뒤에 정수 표현. (`$-577` 또는 $`0x1F` 등)
+- *레지스터(Register)*: 레지스터에 저장된 값을 읽음.
+- *메모리(Memory)*: 메모리 주소(*effective address*)에 저장된 값을 읽음.
+- *Scale factor*: 1, 2, 4 또는 8만 가능.
+
 
 ## Data Movement Instructions
 
