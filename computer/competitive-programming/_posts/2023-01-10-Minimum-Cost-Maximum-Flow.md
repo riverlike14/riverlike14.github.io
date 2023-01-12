@@ -21,7 +21,7 @@ private:
     int flow[N][N];
 
     bool visited[N];
-	bool inqueue[N];
+    bool inqueue[N];
     node previous[N];
     vector<node> children[N];
     int cost[N][N];
@@ -105,8 +105,8 @@ public:
             total_cost += additional_cost;
         }
 
-		cout << total_flow << endl;
-		cout << total_cost << endl;
+        cout << total_flow << endl;
+        cout << total_cost << endl;
     }
 };
 ```
