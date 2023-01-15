@@ -1,92 +1,69 @@
 ---
-title: "[React] Using an API with React"
+title: "[React] Image Search with Unsplash API"
 ---
 
 # App Overview
 
-![Preview](https://imgur.com/Rhp3So1.png)
+![Preview](https://imgur.com/keWxWCl.png)
 
-Installed Libraries: Axios
+## Features
 
-# Features
+- Handles `<input />` element.
+- Uses [Unsplash.com](https://unsplash.com) an API.
+  - `async`, `await` javascript keywords.
+- Renders grid images.
 
-- handles `<input />` element.
-- using an API
-  - `async`, `await`
-- Grid image
+## Installed Libraries
 
-# Component Design
+- `axios`
+
+## Component Design
 
 ![Component Design](https://i.imgur.com/RNT6nlZ.png)
 
 - `App`: Organize all components at the top.
-- `SearchBar`
+- `SearchBar`: Capture search term from user and send the information to `App` component.
 - `ImageList`: Take an array of images, map each image to `ImageShow` component.
 - `ImageShow`: Responsible for showing one individual image.
 
-## Codes
 
-### `index.js`
-
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-```
-
-### `App.js`
-
-```jsx
-function App() {
-  return (
-    <div>App</div>
-  )
-}
-
-export default App;
-```
-
-# The Path Forward
+# Unsplash API
 
 ![Request and Response Flow](https://i.imgur.com/ae90kWn.png)
 
-Think of the data fetching process first.
-
+Data fetching process
 1. Our app is going to make a request over to the API.
 2. The API is going to send back a response.
 
-Notice.
+Notes
 - React has no tools, objects, functions for making HTTP requests.
 - React only cares about showing content and handling user events.
-- We can write a lot of business logic + data fetching *without worrying about React.*
+- Therefore we can write a lot of business logic and data fetching *without worrying about React.*
 
-# Understanding the Unsplash API
+## Prerequisites
 
 1. Sign up for an account.
-2. Create an 'app' to get an Access Key
+2. Create an app to get an Access Key
 
 ## Documentation
 
-Schema -> Location\\
-Authorization -> Public Authentication\\
-Search -> Search photos\\
+Unsplash Developers Documentation
+- [Location](https://unsplash.com/documentation#schema)
+  - The API is available at `https://api.unsplash.com/`.
+- [Authorization](https://unsplash.com/documentation#authorization)
+  - Pass your application's access key via the HTTP Authorization header:
+  - `Authorization: Client-ID YOUR_ACCESS_KEY`
+- [Search photos](https://unsplash.com/documentation#search-photos)
+  - Get a single page of photo results for a query.
+  - `GET /search/photos?query=SEARCH_TERMS`
 
-GET https://api.unsplash.com**/search/photos?query=cars**\\
-Authorization: Client-ID abc123
+# Making an HTTP Request with `axios`
 
-# Making an HTTP Request
-
-- React itself has no functions/tools for making HTTP requests.
-- To make requests, we commonly use either **Axios** or **Fetch**.
+To make requests, we commonly use either **Axios** or **Fetch**.
+- We use `axios` in this app.
 
 ```js
+// axios.get format
 axios.get(url, {
   headers: {
     // Headers that we want to add into the request
@@ -97,61 +74,21 @@ axios.get(url, {
   },
 });
 ```
-<br/>
 
-Create a new `api.js` file.
-- Contains all the code related to contacting the Unsplash API.
-
-```js
-import axios from "axios";
-
-const AccessKey = "..."; // your AccessKey
-
-const searchImages = async () => {
-  const response = await axios.get("https://api.unsplash.com/search/photos", {
-    headers: {
-      Authorization: `Client-ID ${AccessKey}`
-    },
-    params: {
-      query: "cars"
-    }
-  });
-
-  return response;
-};
-
-export default searchImages;
-```
-
-The code should work. `console.log(response)` to check the code.
-
-# Using Async:Await
+## About `async` and `await`
 
 Javascript does not automatically pause when you make a request.
-Response has not been received yet.
 
 ```js
 const fetchData = () => {
   const response = makeRequest(); // JS starts the request...
   console.log(response); // ...and then instantly runs this line.
+  // Response has not been received.
 }
 ```
 
-We have to tell Javascript not to try to work with the response until it has actually been received.
-```js
-const fetchData = () => {
-  const response = makeRequest(); // JS starts the request.
-
-  /*
-    Dear JS, please wait until we get a response
-    before continuing on to the next line of code
-  */
-
-  console.log(response); // Now the response is ready.
-}
-```
-
-Use async/await to tell JS to wait for the request to finish before moving on.
+Javascript should not try to work with the response until it has actually been received.
+- Use async/await to wait for the request to finish before moving on.
 
 ```js
 const fetchData = async () => { // 'async' is a requirement when you use 'await'.
@@ -160,16 +97,17 @@ const fetchData = async () => { // 'async' is a requirement when you use 'await'
 }
 ```
 
-# Data Fetching Cleanup
+## Unsplash API Image Search Request
 
-Update on `api.js`
-- edit search term
-- instead of `response`, return an array of images(`response.data.results`).
+- We create a new `api.js` file.
+- It contains all the code related to contacting the Unsplash API.
+- Instead of `response`, return an array of images(`response.data.results`).
 
 ```js
+// "./api.js"
 import axios from "axios";
 
-const AccessKey = "..."; // your AccessKey
+const AccessKey = "..."; // YOUR_ACCESS_KEY
 
 const searchImages = async (term) => {
   const response = await axios.get("https://api.unsplash.com/search/photos", {
@@ -177,10 +115,11 @@ const searchImages = async (term) => {
       Authorization: `Client-ID ${AccessKey}`
     },
     params: {
-      query: term,
+      query: term
     }
   });
 
+  // return response; // It should work. Check it with console.log(response)
   return response.data.results;
 };
 
@@ -360,11 +299,11 @@ import searchImages from "./api";
 const App = () => {
   /*
   const handleSubmit = (term) => {
-    const res = searchImages(term); // returns Promise
+    const results = searchImages(term); // returns Promise
   }
   */
   const handleSubmit = async (term) => {
-    const res = await searchImages(term);
+    const results = await searchImages(term);
   }
 
   return (
@@ -401,8 +340,8 @@ const App = () => {
   const [images, setImages] = useState([]);
 
   const handleSubmit = async (term) => {
-    const res = await searchImages(term);
-    setImages(res.data.results);
+    const results = await searchImages(term);
+    setImages(results);
   }
 
   return (
@@ -422,7 +361,7 @@ export default App;
 
 # Building a List of Images
 
-![List of images](https://i.imgur.com/5ozH1uy.png)
+![List of images](https://i.imgur.com/GUpeuo7.png)
 
 1. Apply a `Key` to each element during the mapping step.
 2. After re-rendering, compare the keys on each `ImageShow` to the *keys from the previous render*.
@@ -458,8 +397,8 @@ export default ImageShow;
 
 # A Touch of Styling
 
-"./components/SearchBar.css"
 ```css
+/* "./components/SearchBar.css" */
 .search-bar {
   border: 1px solid lightgray;
   border-radius: 5px;
@@ -472,8 +411,8 @@ export default ImageShow;
 }
 ```
 
-"./components/ImageList.css"
 ```css
+/* "./components/ImageList.css" */
 .image-list {
   columns: 6 200px;
   column-gap: 10px;
