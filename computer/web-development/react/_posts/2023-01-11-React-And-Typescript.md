@@ -1,5 +1,5 @@
 ---
-title: "[React] 리액트와 타입스크립트"
+title: "[Typescript] 리액트와 타입스크립트"
 ---
 
 # `props`와 인터페이스

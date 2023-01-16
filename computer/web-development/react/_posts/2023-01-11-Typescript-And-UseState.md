@@ -1,5 +1,5 @@
 ---
-title: "[React] 타입스크립트와 `useState`"
+title: "[Typescript] 타입스크립트와 `useState`"
 ---
 
 # 배열의 자료형
