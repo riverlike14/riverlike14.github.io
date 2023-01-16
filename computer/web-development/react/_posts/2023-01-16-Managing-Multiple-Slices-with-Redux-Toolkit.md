@@ -1,15 +1,29 @@
 ---
 title: "[React] Managing Multiple Slices with Redux Toolkit"
 ---
+# App Overview
 
-# Library
+![App Preview](https://imgur.com/70DHFAP.png)
+
+## Features
+
+- Handles two slices.
+- Renders searched items.
+
+## Installed Libraries
+
 - `@reduxjs/toolkit`
 - `react-redux`
 - `bulma`
 
-# Adding Component Boilerplate
+## Component Design
 
-![App Overview](https://i.imgur.com/NcxjMmu.png)
+![App Component Preview](https://i.imgur.com/NcxjMmu.png)
+
+- `CarForm`: Take the car name and the car value and add it in to the list of cars.
+- `CarSearch`: Update search term whenever user types in.
+- `CarList`: Show the list of cars matching with the search term.
+- `CarValue`: Sum of the total value of cars in the current list.
 
 # Thinking About Derived State
 
@@ -360,7 +374,7 @@ export default CarList;
 - Change `cars` into `data`, which is more general name.
 
 ```js
-// "./store/slice/carsSlice.js"
+// "./store/slices/carsSlice.js"
 import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const carsSlice = createSlice({
@@ -591,6 +605,7 @@ Extra Reducers technique
 - Add line 18~23: extraReducers technique
 
 ```js
+// "./store/slices/formSlice.js"
 import { createSlice } from "@reduxjs/toolkit";
 import { addCar } from "./carsSlice";
 
@@ -661,8 +676,8 @@ export default CarSearch;
 
 ```jsx
 // "./components/CarList.js"
-// ..
 
+// ...
 const CarList = () => {
   const dispatch = useDispatch();
 
@@ -671,9 +686,7 @@ const CarList = () => {
       return car.name.toLowerCase().includes(searchTerm.toLowerCase());
     })
   });
-
-  // ...
-
+// ...
 };
 
 export default CarList;
