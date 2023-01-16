@@ -13,6 +13,8 @@ title: "[운영체제] Threads & Concurrency(진행중)"
 
 > **쓰레드(Thread)**: CPU 사용의 기본 단위.
 
+![프로세스와 쓰레드](https://imgur.com/0r8MXNZ.png)
+
 쓰레드의 구성 요소:
 - 쓰레드 ID.
 - PC(Program Counter).
@@ -47,7 +49,26 @@ title: "[운영체제] Threads & Concurrency(진행중)"
 4. **확장성(Scalability)**: 쓰레드는 서로 다른 CPU에서 실행될 수 있음.
 - 단일쓰레드 프로세스는 하나의 CPU에서만 실행됨.
 
-# Multicore Programming
+# 멀티코어 프로그래밍
+
+> - **동시적(concurrent) 시스템**: 한 번에 많은 일(task)을 진행시킴.
+> - **병렬적(parallel) 시스템**: 동시에 많은 일을 수행할 수 있음.
+
+## 멀티코어 프로그래밍의 어려움
+
+멀티코어 프로그램을 만들 때 마주치는 어려움.
+- **작업 확인(Identifying tasks)**: 하나의 작업을 서로 독립적이고 동시적으로 실행가능한 작업으로 분할.
+- **균형(Balance)**: 작업들은 같은 가치와 양을 갖는 작업들로 분할되어야 함.
+- **데이터 분할(Data splitting)**: 프로그램의 데이터 역시 작업들과 같이 분할되어야 함.
+- **데이터 의존성(Data dependency)**: 특정 데이터에 접근할 수 있는 작업(task)들로 어떤 것들이 있는지 확인해야 함.
+- **테스트와 디버깅(Testing and debugging)**: 단일쓰레드 프로그램과 달리 실행 경로가 다양하기 때문에 테스트와 디버깅의 난이도 증가.
+
+## 병렬성의 종류
+
+병렬성에는 크게 두 가지 종류가 존재.
+- **데이터 병렬성(Data parallelism)**: 데이터를 여러개로 분할한 뒤 각각의 CPU에서 같은 작업들을 수행.
+- **작업 병렬성(Task parallelism)**: 서로 다른 역할을 하는 작업들을 각각의 CPU에 분배.
+  - 서로 다른 쓰레드가 같은 데이터에서 작업 가능.
 
 # Multithreading Models
 
