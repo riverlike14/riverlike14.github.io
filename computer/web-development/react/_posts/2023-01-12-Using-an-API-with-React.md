@@ -145,7 +145,7 @@ Terms
 
 ## Component Design
 
-![Component Design](https://i.imgur.com/diMJQ2T.png)
+![Component Design](https://i.imgur.com/D5sv4ZR.png)
 
 - Sibling components cannot directly communicate.
 - Sibling components can share information by involving the parent component.
@@ -157,7 +157,7 @@ Terms
 
 # Implementing Child to Parent Communication
 
-![Information Flow](https://i.imgur.com/0iYZtFG.png)
+![Information Flow](https://i.imgur.com/OT3jhQl.png)
 
 - Pass an event handler down.
 - Call the event handler when something happens.
@@ -321,7 +321,7 @@ export default App;
 - Use `props` to communicate from parent to child.
 - App can send the list of images down to `ImageList` using props!
 
-![images to ImageList](https://i.imgur.com/YJgRil6.png)
+![images to ImageList](https://i.imgur.com/N5SzJL4.png)
 
 1. We need to communicate the array of images down to ImageList.
 2. This might look confusing because we are going to combine the state system + the props system.
@@ -361,7 +361,7 @@ export default App;
 
 # Building a List of Images
 
-![List of images](https://i.imgur.com/GUpeuo7.png)
+![List of images](https://i.imgur.com/tLGiPaL.png)
 
 1. Apply a `Key` to each element during the mapping step.
 2. After re-rendering, compare the keys on each `ImageShow` to the *keys from the previous render*.
