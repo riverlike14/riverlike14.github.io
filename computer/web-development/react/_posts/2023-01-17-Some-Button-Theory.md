@@ -14,7 +14,8 @@ We are going to learn how wrap `<button />` HTML element.
 - Pass all of the props from `<Button />` component to the underlying `<button />` element.
 - Make props in `<Button />` so that user can apply different style.
 - Use TailwindCSS.
-- Use `prop-types` to check errors.
+- Use prop-types to check errors.
+- Use classnames to combine multiple class names.
 
 ## Installed Libraries
 
@@ -58,7 +59,7 @@ export default Button;
 - `<Button purpose="primary" rounded outline />` does fine.
 - But `<Button primary rounded outline />` reads better.
 
-# Validate Props with PropTypes
+# Validating Props with PropTypes
 
 `<Button />` component does not expect multiple purposes.
 - No more than one `primary`, `secondary`, `success`, `warning`, `danger` props can be passed.
@@ -67,7 +68,7 @@ export default Button;
 
 ## `prop-types` Library
 
-`prop-types` is a Javascript library that validates the props that get passed into a component.
+**prop-types** is a Javascript library that validates the props that get passed into a component.
 
 ```jsx
 import PropTypes from "prop-types";
@@ -155,26 +156,29 @@ Follow the instructions on [https://tailwindcss.com/docs/guides/create-react-app
 ## How to use Tailwind
 
 1. Decide on a new styling rule you want to add.
-- Note: Tailwind removes default HTML styles.
 2. Go to [https://tailwindcss.com/docs/](https://tailwindcss.com/docs/).
 3. Hit `Ctrl + K`(or `command + K`) and search for your styling rule.
 4. Add appropriate className to your elements.
 
 # Review on Styling
 
-Our goal: style button element with TailwindCSS.
+We want to make a style for the `<Button />` element with TailwindCSS.
 
 ![Change styling](https://i.imgur.com/MBtxokR.png)
 
-We have to know what styling rules we need to change to get a 'primary' looking button.
+- Tailwind removes default HTML styles.
+- Therefore, we have to figure out what styling rules we need to get a `primary` looking button from scratch.
 
-CSS Box Model
+## CSS Box Model
+
 ![CSS Box Model](https://i.imgur.com/qYCs8h0.png)
 
-- Border controlled by "border-width", "border-color"
-- Padding controlled by "padding", "background-color"
+- Border controlled by `border-width`, `border-color`
+- Padding controlled by `padding`, `background-color`
 
-We need to change
+## `<Button />` Style with TailwindCSS
+
+Styles that we need to change for `<Button />` component:
 - Padding
 - Border width
 - Border color
@@ -200,12 +204,9 @@ const Button = ({
 export default Button;
 ```
 
-# The `ClassNames` Library
+# The `Classnames` Library
 
-- Optional.
-- JS library for building up a `className` string based on different values.
-- Library is called `classnames`, but prop is `className`.
-
+**Classnames** is a Javascript library for building up a `className` string based on different values.
 ```js
 let bgColor = undefined;
 if (primary) {
@@ -225,15 +226,11 @@ classNames({
 })
 ```
 
-For eacth key-value pair,
-- Is the value truthy?
-- If so, add the key to the string I'm building.
+- It is optional.
+- Library is called `classnames`, but prop is `className`.
+- For each key-value pair, add the key to the string if the value is true.
 
-# Building Some Variations
-
-# Finalizing the Variations
-
-Conflicting class name -> later classname is going to override the earlier classname
+# Building Variations
 
 ![Buttons results](https://imgur.com/ScF6Qcr.png)
 
@@ -276,14 +273,40 @@ const Button = ({
 export default Button;
 ```
 
+- When there are conflicting class names, later one is overriding the former one.
+  - The text color for `<Button primary outline />` becomes blue.
+
 # Using Icons in React Projects
 
-Install React-icons
+We can use icons in react projects with **React Icons**.
+- Simply visit [https://react-icons.github.io/react-icons/](https://react-icons.github.io/react-icons/) and find icons.
 
-![React-icon version 1](https://imgur.com/amEtBkg.png)
+```jsx
+import { SiManjaro } from "react-icons/si";
+import Button from "./Button";
 
-Icon is displayed on top of the text.
-- add `flex items-center` in `<Button />` component.
+const App = () => {
+  return (
+    <div>
+      <Button primary>
+        <SiManjaro />Hello
+      </Button>
+      <Button secondary>HELLO</Button>
+      <Button success>HELLO</Button>
+      <Button warning>HELLO</Button>
+      <Button danger>HELLO</Button>
+    </div>
+  );
+};
+
+export default App;
+```
+
+## Fixing Icons Style
+
+The icon is displayed on top of the text.
+- ![React-icon version 1](https://imgur.com/amEtBkg.png)
+- Add `flex items-center` in `<Button />` component.
 
 ```jsx
 // "./Button.js"
@@ -301,13 +324,12 @@ const Button = ({
 export default Button;
 ```
 
-![React-icon version 2](https://imgur.com/c0ym1KL.png)
-
-Icon and text are too close.
-- `<SiManjaro className="mr-1">` works, but you have to add it to all of icons.
-- When using tailwindCSS, don't have a single place to handle this problem.
-  - apply margin when icon is in button
-- edit index.css file
+Now, the icon and the text are too close to each other.
+- ![React-icon version 2](https://imgur.com/c0ym1KL.png)
+- Edit icon as `<SiManjaro className="mr-1">` would work, but you have to add it to all of the icons.
+- TailwindCSS doesn't have a single place to fix problems like this:
+  - Apply margin for 5px when an icon is in a button.
+- We have to edit `index.css` file.
 
 ```css
 /* index.css */
@@ -320,44 +342,29 @@ button > svg {
 }
 ```
 
-![React-icon version 3](https://i.imgur.com/2pjhql7.png)
+Problem solved.
+- ![React-icon version 3](https://i.imgur.com/2pjhql7.png)
 
 # Issues with Event Handlers
 
-Now, we've got a great Button component.
-- Let's tell all other engineers on our project to use our `<Button />` instead of `<button />`.
-- Immediate feedback would be "How do I add a click event handler to this `<Button />`?"
+Now, we've got a `<Button />` component.
+- It is time to pass down the event handlers from `<Button />` to the `<button />`.
+- However, simply taking the event handler and passing it through to the underlying element is not a good solution.
+  - For example, `<button onClick={onClick} ... />` can be a possible solution.
+  - But there are so many event handlers besides `onClick`, such as `onMouseEnter` or `onMouseLeave` and so on. We have to deal with all of them.
 
-possible solution:
-- take the `onClick` prop and *pass it through* to the plain button.
-- But not a perfect solution...
+## Passing Props Through
 
-After some amount time,
-- Another feedback would be "How do I add a mouseover event handler to this `<Button />`?"
-  - `primary`, `outline`, `children`, ...: Props that our `<Button />` cares about.
-  - `onClick`, `onMouseOver`, ...: The rest of the props, probably for the `<button />`?
-
-It is impossible to pass down all the event handlers to the plain button manually.
-- We need a better solution.
-
-# Passing Props Through
-
-`...rest` does
+Fortunately, it is possible to pass down all the event handlers to the plain `<button />`.
+- Use `...rest` syntax.
 
 ```jsx
 // "./Button.js"
 import classNames from "classnames";
 
 const Button = ({ 
-  children,
-  primary,
-  secondary,
-  success,
-  warning,
-  danger,
-  outline,
-  rounded,
-  ...rest
+  // ...
+  ...rest // rest = { onClick: ... }
 }) => {
   // ...
 
@@ -371,12 +378,13 @@ const Button = ({
 export default Button;
 ```
 
-# Handling the Special ClassName Case
+# Issues with Special Props Name: `className`
 
-`<Button className="mb-5" primary />` will not work.
-- `<button {...rest} className={classes}/>`
-- `classes` will override `{...rest}` which contains `className="mb-5"`.
-- Add `rest.className` in the `classNames` function.
+User can pass such as `className="mb-5"` props to the `<Button />` componne.
+- However, `<Button className="mb-5" primary />` will not work.
+  - Props with the same name will override the previous one.
+  - In this case, `{...rest}`, which contains `className="mb-5"`, will be overrided by `className={classes}`.
+- You can add `rest.className` to the `classNames` function's parameter to solve this issue.
 
 ```jsx
 // "./Button.js"
@@ -387,6 +395,7 @@ const Button = ({
   ...rest
 }) => {
   const classes = classNames(rest.className, "flex items-center px-3 py-1.5 border", {
+    // rest.className will be passed to the classes variable.
     // ...
   });
 
