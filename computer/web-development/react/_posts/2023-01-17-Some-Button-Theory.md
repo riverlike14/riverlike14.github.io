@@ -4,43 +4,41 @@ title: "[React] Some Button Theory"
 
 # Overview
 
+![Buttons](https://i.imgur.com/CBcRwPb.png)
+
+We are going to learn how wrap `<button />` HTML element.
+- Create `<Button />` component that works equivalently as `<button />` element.
+
 ## Features
 
-- Make `<Button />` component that can work just like as `<button />`.
-- passover all of the props from `<Button />` to the underlying element `<button />`
-- different style for different props
-- tailwindcss
-- `prop-types` library to error check.
+- Pass all of the props from `<Button />` component to the underlying `<button />` element.
+- Make props in `<Button />` so that user can apply different style.
+- Use TailwindCSS.
+- Use `prop-types` to check errors.
 
-## Library
+## Installed Libraries
 
 - `prop-types`
 - `tailwindcss`
 - `classnames`
 - `react-icons`
 
-# Some Button Theory
+# Custom `<Button />` Component
 
-![Buttons](https://i.imgur.com/CBcRwPb.png)
-
-Engineers must use one single button component. How?
-1. Use the `Button` component.
+Rules with `<Button />` component:
+1. Use the `<Button />` component only.
 2. Don't make `<button />` elements.
 3. All buttons will be styled based on the purpose/intent of the button.
-4. No custon CSS. Only presets.
+- ![Buttons and explanations](https://i.imgur.com/UvcnN8Z.png)
+4. No custom CSS. Only presets.
 
-![Buttons and explanations](https://i.imgur.com/UvcnN8Z.png)
+## Underlying Elements
 
-- Color sets differ from companies.
-- Each web page has consistent color design.
-
-# Underlying Elements
-
-![Button component](https://i.imgur.com/GJrthtl.png)
-
-When a component tries to create the exact same plain html equivalent element,
-- **Wrapper**: Component
-- **Underlying element**: Plaine HTML element
+Create a component that works exactly same as the plain equivalent HTML element.
+- **Wrapper**: Component wrapping the plain HTML element.
+  - Additional props can be passed to this wrapper.
+  - ![Button component](https://i.imgur.com/GJrthtl.png)
+- **Underlying element**: The plain HTML element.
 
 ```jsx
 // "./Button.js"
@@ -53,25 +51,23 @@ const Button = ({ children }) => { // Wrapper
 export default Button;
 ```
 
-# The Children Prop
-
-# Props Design
+## Props Design
 
 ![Button props design](https://i.imgur.com/T7Yt7Er.png)
 
-- `<Button purpose="primary" rounded outline />` works fine.
+- `<Button purpose="primary" rounded outline />` does fine.
 - But `<Button primary rounded outline />` reads better.
 
-# Validating Props with PropTypes
+# Validate Props with PropTypes
 
-- `if (primary && secondary) { throw new Error("...") }` works.
-- But too many extra code.
+`<Button />` component does not expect multiple purposes.
+- No more than one `primary`, `secondary`, `success`, `warning`, `danger` props can be passed.
+- You can type `if (primary && secondary) { throw new Error("...") }; ...` inside the code.
+  - But it requires too many extra codes.
 
-`prop-types` javascript library
-- Optional
-- JS library to validate the props that get passed into your component.
-- If someone passes down the incorrect kind of value(number instead of boolean), a warning will appear in console.
-- Used to be very popular. Now Typescript does almost the same thing (and more).
+## `prop-types` Library
+
+`prop-types` is a Javascript library that validates the props that get passed into a component.
 
 ```jsx
 import PropTypes from "prop-types";
@@ -87,9 +83,12 @@ Card.propTypes = { // Validation rules
 }
 ```
 
-- Our case is different.
+- It is optional.
+- If someone passes down the incorrect kind of value(number instead of boolean), a warning will appear in console.
+- It is used to be very popular.
+  - However, [Typescript](https://www.typescriptlang.org) does almost the same thing (and more).
 
-# PropTypes in Action
+## PropTypes in Action
 
 ```jsx
 // "./Button.js"
@@ -114,8 +113,8 @@ Button.propTypes = {
 export default Button;
 ```
 
-- primary, secondary, ... will be `undefined`
-- `Number(undefined) = NaN` where as `Number(!!undefined) = 0`
+- If not passed down, `primary`, `secondary`, ... will be `undefined`
+  - `Number(undefined)` is `NaN`,  whereas `Number(!!undefined)` becomes `0`.
 
 # TailwindCSS
 
@@ -284,7 +283,7 @@ Install React-icons
 ![React-icon version 1](https://imgur.com/amEtBkg.png)
 
 Icon is displayed on top of the text.
-- add `flex items-center` in `Button` component.
+- add `flex items-center` in `<Button />` component.
 
 ```jsx
 // "./Button.js"
