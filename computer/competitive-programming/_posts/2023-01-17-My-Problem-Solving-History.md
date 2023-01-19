@@ -41,15 +41,19 @@ Last Updated: 2023년 1월 18일.
   - Platinum 3
   - 1h 30min, new concept
   - Try: 1
+- [교차하지 않는 원의 현들의 최대집합](https://www.acmicpc.net/problem/2673)
+  - Platinum 4
+  - 20min, success
+  - Try: 1
 
 1월 18일.
 - [하늘에서 떨어지는 1, 2, ..., R-L+1개의 별](https://www.acmicpc.net/problem/17353)
   - Platinum 2
-  - 15min, succeeded
+  - 15min, success
   - Try: 2
 - [단순 다각형](https://www.acmicpc.net/problem/3679)
   - Platinum 4
-  - 1hr, failed
+  - 1hr, fail
   - Try: 2
 
 1월 17일. 
