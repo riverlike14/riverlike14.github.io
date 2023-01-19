@@ -153,87 +153,74 @@ Terms
 - Challenging: When the user presses the 'enter' key, we need to get the search term up to the `App`.
   - Child to parent communication.
 
-# Child to Parent Communcation
-
-# Implementing Child to Parent Communication
+## Child to Parent Communcation
 
 ![Information Flow](https://i.imgur.com/OT3jhQl.png)
 
-- Pass an event handler down.
-- Call the event handler when something happens.
+- Parent component pass an event handler down to child component.
+- Child component calls the event handler when something happens.
+- ```jsx
+  import SearchBar from "./components/SearchBar";
+  import searchImages from "./api";
 
-```jsx
-import SearchBar from "./components/SearchBar";
-import searchImages from "./api";
+  const App = () => {
+    const handleSubmit = (term) => {
+      searchImages(term);
+    }
 
-const App = () => {
-  const handleSubmit = (term) => {
-    searchImages(term);
-  }
+    return (
+      <div>
+        <SearchBar onSubmit={handleSubmit} />
+      </div>
+    );
+  };
 
-  return (
-    <div>
-      <SearchBar onSubmit={handleSubmit} />
-    </div>
-  );
-};
+  export default App;
+  ```
 
-export default App;
-```
+# Handling SearchBar Component
 
-# Handling Form Submission
+Now we want to make a `<SearchBar />` component.
+- `<SearchBar />` component should know what the input value is.
+- When press `Enter` key, `<SearchBar />` component will gather information and make a network request.
 
-Press me "Enter" Key technique.
-- put `<input />` inside `<form>`.
-- HTML technique (Nothing to do with React, JS)
-- When pressed "Enter", form will trigger `onSubmit` event.
+## Handling Form Submission
 
-But... `<form>` tag does something weird when press "Enter".
-- Trigger browser event.
-- Default behavior around forms.
-- Browser gather information in the form and then make network request
-  - `<form><input name="somename" value="someinput" /></form>`
-  - When entered, request "localhost:3000/somename=someinput"
+Default behavior of `<form>`.
+- When press `Enter`, browser gathers information in the `<form>` tag and triggers a network event.
+  - ```html
+    <form>
+      <input name="somename" value="somevalue" />
+    </form>
+    ```
+  - In this case, the browser will request `https://localhost:3000/?somename=somevalue`.
+- In Javascript, `event.preventDefault()` will prevent this event from being triggered.
+  - ```jsx
+    const SearchBar = () => {
+      const handleFormSubmit = (event) => {
+        event.preventDefault();
+      }
 
-How to prevent default behavior of an event?
-- receive `event` argument in the event handler.
-- `event.preventDefault();`
+      return (
+        <div>
+          <form onSubmit={handleFormSubmit} />
+        </div>
+      );
+    };
+    ```
 
-```jsx
-import React from "react";
+## Handling Input Elements
 
-const SearchBar = ({ onSubmit }) => {
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    // onSubmit(term);
-  }
-
-  return (
-    <div>
-      <form onSubmit={handleFormSubmit} >
-        <input />
-      </form>
-    </div>
-  );
-};
-
-export default SearchBar;
-```
-
-Is it okay to use this technique or is it too overboard?
-- Totally okay to use this.
-
-# Handling Input Elements
-
-How to extract string in the input element
-- `document.querySelector("input").value` &larr; NEVER DO THIS
-
-## Handling Text Inputs
+We want to handle string in the input element.
+- Controlled component
 1. Create a new piece of state.
 2. Create an event handler to watch for the `onChange` event.
 3. When the `onChagne` event fires, get the value from the input.
 4. Take that value from the input and use it to update your state.
 5. Pass your state to input as the value prop.
+
+- In this manner, we can put control of the value of the `input` element under the state system.
+- `document.querySelector("input").value` &larr; **NEVER DO THIS**
 
 ```jsx
 import { useState } from "react";
@@ -245,65 +232,32 @@ const SearchBar = ({ onSubmit }) => {
     setTerm(event.target.value);
   }
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    onSubmit(term);
-    // onSubmit(document.querySelector("input").value); // NEVER DO THIS
-  }
-
   return (
     <div>
-      <form onSubmit={handleFormSubmit} >
-        <input value={term} onChange={handleChange} />
-      </form>
+      <input value={term} onChange={handleChange} />
     </div>
   );
 };
-
-export default SearchBar;
 ```
-
-1. User types in `input`.
-2. Browser updates the text in the `input`.
-3. Browser triggers an event to say the `input` was updated.
-- 2, 3 are normal browser behaviors.
-4. We read the value from the input, update state.
-5. State updated, and component rerenders.
-6. We provide "value" prop to `input` - React Changes the `input`'s value.
-
-WHY??
-- Stealing control of the value of the `input` element from the browser.
-- put the value of the `input` under the control of a state system.
-- Need to read the value of the `input`?
-  - Look at `term` state
-  - NO  `document.querySelector("input").value`
-- Update the value of the `input`?
-  - Call `setTerm`
-  - NO  `document.querySelector("input").value = ...`
-- component re-renders with every keypress 
-  - Very easy to add in more advanced features.
+- Need to read the value of the `input`?  &rarr; Look at `term` state.
+- Update the value of the `input`?  &rarr; Call `setTerm(...)`.
+- Component rerenders with every keypress.  &rarr; Easy to add in more advanced features.
 
 # Reminder on `async` and `await`
 
-- `searchImages(term)` returns `Promise`.
-  - The request is not yet completed.
-- We need to tell JS that when calling `searchImages`, this is an asynchronous function.
-  - We do not want to continue execution until `searchImages` finished running.
-  - `await` again.
-- `handleSubmit` becomes also an asynchronous function as well.
+We need to tell JS that `searchImages` is an asynchronous function.
+- `searchImages(term)` is an asynchronous function which returns `promise`.
+- So we have to use `await` keyword again.
+- Consequently, `handleSubmit` becomes an asynchronous function as well.
 
 ```jsx
 import SearchBar from "./components/SearchBar";
 import searchImages from "./api";
 
 const App = () => {
-  /*
-  const handleSubmit = (term) => {
-    const results = searchImages(term); // returns Promise
-  }
-  */
   const handleSubmit = async (term) => {
     const results = await searchImages(term);
+    // ...
   }
 
   return (
@@ -312,23 +266,20 @@ const App = () => {
     </div>
   );
 };
-
-export default App;
 ```
 
-# Communicating the List of Images Down
+# Rendering the List of Images
 
-- Use `props` to communicate from parent to child.
-- App can send the list of images down to `ImageList` using props!
+Finally, `<App />` component will pass list of images down to `<ImageList />` component.
 
-![images to ImageList](https://i.imgur.com/N5SzJL4.png)
+## Passing the List of Images Down
 
-1. We need to communicate the array of images down to ImageList.
-2. This might look confusing because we are going to combine the state system + the props system.
-3. Let me give you two reminders about the state system.
+`<App />` can send the list of images down to `<ImageList />` by using props.
 
+- ![images to ImageList](https://i.imgur.com/N5SzJL4.png)
 - After doing a search, we want to ***update content on the screen*** with new list of images.
-  - STATE!!!
+  - We need to use *state* system.
+- When a component updates state, the component and **all of its children** are rerendered.
 
 ```jsx
 import { useState } from "react";
@@ -355,35 +306,52 @@ const App = () => {
 export default App;
 ```
 
-- When you update state, the component and **all of its children** are rerendered.
-- From the perspective of `App`, images is `state`.
-- From the perspective of `ImageList`, images is `props`.
-
-# Building a List of Images
+## Building a List of Images
 
 ![List of images](https://i.imgur.com/tLGiPaL.png)
 
-1. Apply a `Key` to each element during the mapping step.
-2. After re-rendering, compare the keys on each `ImageShow` to the *keys from the previous render*.
+Process of rendering list of components.
+1. Apply a `key` to each element during the mapping step.
+2. After rerendering, compare the keys on each `<ImageShow />` to the *keys from the previous render*.
 3. Apply minimal set of changes to existing DOM elements.
 - React does 2 and 3.
 
-# Notes on Keys
+```jsx
+// "./ImageList.js"
+import ImageShow from "./ImageShow";
 
-Requirements for `Keys`
-- Use whenever we have a list of elements.(so every time we do a `map`)
+const ImageList = ({ images }) => {
+  const renderedImages = images.map(image => {
+    return <ImageShow key={image.id} image={image} />
+  });
+
+  return (
+    <div className="image-list">
+      {renderedImages}
+    </div>
+  )
+}
+
+export default ImageList;
+```
+
+## Notes on Keys
+
+Requirements for `keys`.
+- Use whenever we have a list of elements.
 - Add the key to the top-most JSX element in the list.
 - Must be a string or number.
 - Should be unique *for this list*.
 - Should be consistent across rerenders.
 
 Which keys should I use?
-- Almost all lists we ever create will be built by mapping over an array of objects fetched from a database.
-- These objects will have a unique "id". This is the perfect key to use.
+- Almost all lists of objects are fetched from a database.
+- These objects will have a unique `id`.
 
-# Displaying Images
+## Displaying Images
 
 ```jsx
+// "./components/ImageShow.js"
 const ImageShow = ({ image }) => {
   return (
     <div>
@@ -395,7 +363,7 @@ const ImageShow = ({ image }) => {
 export default ImageShow;
 ```
 
-# A Touch of Styling
+## Minor CSS Styling
 
 ```css
 /* "./components/SearchBar.css" */
