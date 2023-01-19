@@ -36,6 +36,12 @@ Last Updated: 2023년 1월 18일.
 
 ### 셋째 주
 
+1월 19일.
+- [Suffix Array](https://www.acmicpc.net/problem/9248)
+  - Platinum 3
+  - 1h 30min, new concept
+  - Try: 1
+
 1월 18일.
 - [하늘에서 떨어지는 1, 2, ..., R-L+1개의 별](https://www.acmicpc.net/problem/17353)
   - Platinum 2
