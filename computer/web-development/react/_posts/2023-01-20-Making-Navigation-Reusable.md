@@ -2,73 +2,73 @@
 title: "[React] Making Navigation Reusable"
 ---
 
-# Traditional Browser Navigation
+# App Overview
 
-Standard Browser Behavior
-- When the browser loads a new HTML document, all existing JS variables and code is dumped
-  - Does not really matter for a traditional HTML-focused app
-  - Kind of bad for a React app
-  - With one request, user instantly sees content on the screen
+![Preview Dropdown](https://imgur.com/x3wHzTu.png)
+- `localhost:3000`
 
-React version
-- If our React app followed traditional navigation ideas, it'd take ay more requests to show basic content
+![Preview Accordion](https://imgur.com/ylise13.png)
+- `localhost:3000/accordion`
 
-# Theory of Navigation in React
+![Preview Buttons](https://imgur.com/IXg3JK4.png)
+- `localhost:3000/buttons`
 
-How Navigation Works with React
-- User types our address in
-  - Always send back the `index.html` file
-  - When app loads up, look at address bar and use it to decide what content to show
-- User clicks a link or presses "back" button
-  - Stop the browser's default page-switching behavior
-  - Figure out where the user was trying to go
-  - Update content on the screen to trick the user into thinking they swapped pages
-  - Update address bar to trick the user into thinking they swapped pages
-
-# Extracting the DropdownPage
+## Features
 
 ![Routing app design](https://i.imgur.com/RY4GHvW.png)
 
-# Answering Cricial Questions
+We can navigate through pages.
+- Create custom routing components.
 
-critical question
-- When app loads up, look at address bar and use it to decide what content to show
-  - How do we look at the address bar? What part of it do we care about?
-    - `window.location` object
+# Web Browser Navigation
 
-# The PushState Function
+## Traditional Navigation
 
-Changing the Address Bar
-- `window.location = "http://localhost:3000/dropdown"`
-  - Causes a full page refresh
-- `window.history.pushState({}, "", "/dropdown")`
-  - Updates the address bar but does not cause a refresh
+- When the browser loads a new HTML document, all existing JS variables and codes are dumped.
+  - It does not really matter for a traditional HTML-focused app.
+- When it comes to a React app, however, it is not useful.
+  - User sees content on the screen with only *one* request.
+  - If our React app followed traditional navigation ideas, it'd take way more requests to show basic content.
 
-# Handling Link Clicks
+## Design of Navigation in React
 
-```jsx
-function Link({ to }) {
-  const handleClick = (event) => {
-    event.preventDefault();
-    // ...
-  }
-  return <a onClick={handleClick} href={to}>Click</a>
-}
-```
-- Prop `to` describes the path that user will go to if they click this
-- `event.preventDefault()` stops the standard navigation
-- `onClick={handleClick}` detects a click
+How navigation should work with React.
+- User types our address in:
+  - Always send back the `index.html` file.
+    - Create-React-App already does this.
+  - When app loads up, look at address bar and use it to decide what content to show.
+- User clicks a link or presses "back" button:
+  - Stop the browser's default page-switching behavior.
+  - Figure out where the user was trying to go.
+  - Update content on the screen to trick the user into thinking they swapped pages.
+  - Update address bar to trick the user into thinking they swapped pages.
 
-# Handling Back:Forward Buttons
+# Navigation in React
 
-When user clicks forward or back
-- Window emits a `popstate` event if the user's current url was added by `pushState`
+## Get Current Path
+
+How do we look at the address bar? What part of it do we care about?
+- `window.location` object gives the information.
+- `window.location.pathname` matters.
+
+## The `pushState` Function
+
+How do we update the address bar?
+- `window.location = "http://localhost:3000/dropdown"`. 
+  - However it causes a full page refresh.
+- `window.history.pushState({}, "", "/dropdown")`.
+  - It updates the address bar without causing a refresh.
+  - Suitable for a React app.
+
+## Back, Forward Buttons
 
 ![Window history stack](https://i.imgur.com/Jx2VVZ8.png)
+- When user clicks forward or back, window emits a `popstate` event if the user's current url was added by `pushState`.
 
 # Navigation Context
 
-![NavigationContext](https://i.imgur.com/qF0eo4f.png)
+Create a navigation context of following design.
+- ![NavigationContext](https://i.imgur.com/qF0eo4f.png)
 
 ```jsx
 // "./context/navigation.js"
@@ -78,7 +78,7 @@ const NavigationContext = createContext();
 
 const NavigationProvider = ({ children }) => {
   return (
-    <NavigationContext.Provider value={{}} >
+    {% raw %}<NavigationContext.Provider value={{}} >{% endraw %}
       {children}
     </NavigationContext.Provider>
   )
@@ -103,6 +103,19 @@ root.render(
   </NavigationProvider>
 );
 ```
+## Link Component Design
+
+```jsx
+const Link = ({ to }) => {
+  const handleClick = (event) => {
+    event.preventDefault(); // stops the standard navigation
+    // ...
+  }
+  return <a onClick={handleClick} href={to}>Click</a>
+}
+```
+- Prop `to` describes the path that user will go to if they click this.
+
 
 # Listening to Forward and Back Clicks
 
@@ -408,21 +421,21 @@ export default App;
 import Link from "./Link";
 
 const Sidebar = () => {
-	const links = [
-		{ label: "Dropdown", path: "/" },
-		{ label: "Accordion", path: "/accordion" },
-		{ label: "Buttons", path: "/buttons" },
-	];
+  const links = [
+    { label: "Dropdown", path: "/" },
+    { label: "Accordion", path: "/accordion" },
+    { label: "Buttons", path: "/buttons" },
+  ];
 
-	const renderedLinks = links.map(link => {
-		return <Link key={link.label} to={link.path} >{link.label}</Link>;
-	});
+  const renderedLinks = links.map(link => {
+    return <Link key={link.label} to={link.path} >{link.label}</Link>;
+  });
 
-	return (
-		<div className="sticky top-0 overflow-y-scroll flex flex-col" >
-			{renderedLinks}
-		</div>
-	)
+  return (
+    <div className="sticky top-0 overflow-y-scroll flex flex-col" >
+      {renderedLinks}
+    </div>
+  )
 };
 
 export default Sidebar;
@@ -437,25 +450,25 @@ import DropdownPage from "./pages/DropdownPage";
 import ButtonPage from "./pages/ButtonPage";
 
 const App = () => {
-	return (
-		<div className="container mx-auto grid grid-cols-6 gap-4 mt-4"> // Set sidebar on the left
-			<Sidebar />
-			<div className="col-span-5">
-				<Route path="/accordion">
-					<AccordionPage />
-				</Route>
-				<Route path="/">
-					<DropdownPage />
-				</Route>
-				<Route path="/">
-					<DropdownPage />
-				</Route>
-				<Route path="/buttons">
-					<ButtonPage />
-				</Route>
-			</div>
-		</div>
-	);
+  return (
+    <div className="container mx-auto grid grid-cols-6 gap-4 mt-4"> // Set sidebar on the left
+      <Sidebar />
+      <div className="col-span-5">
+        <Route path="/accordion">
+          <AccordionPage />
+        </Route>
+        <Route path="/">
+          <DropdownPage />
+        </Route>
+        <Route path="/">
+          <DropdownPage />
+        </Route>
+        <Route path="/buttons">
+          <ButtonPage />
+        </Route>
+      </div>
+    </div>
+  );
 }
 
 export default App;
@@ -470,30 +483,30 @@ export default App;
 import Link from "./Link";
 
 const Sidebar = () => {
-	const links = [
-		{ label: "Dropdown", path: "/" },
-		{ label: "Accordion", path: "/accordion" },
-		{ label: "Buttons", path: "/buttons" },
-	];
+  const links = [
+    { label: "Dropdown", path: "/" },
+    { label: "Accordion", path: "/accordion" },
+    { label: "Buttons", path: "/buttons" },
+  ];
 
-	const renderedLinks = links.map(link => {
-		return (
-			<Link
-				key={link.label} 
-				to={link.path} 
-				className="mb-3"
-				activeClassName="font-bold border-l-4 border-blue-500 pl-2"
-			>
-				{link.label}
-			</Link>
-		)
-	});
+  const renderedLinks = links.map(link => {
+    return (
+      <Link
+        key={link.label} 
+        to={link.path} 
+        className="mb-3"
+        activeClassName="font-bold border-l-4 border-blue-500 pl-2"
+      >
+        {link.label}
+      </Link>
+    )
+  });
 
-	return (
-		<div className="sticky top-0 overflow-y-scroll flex flex-col items-start">
-			{renderedLinks}
-		</div>
-	)
+  return (
+    <div className="sticky top-0 overflow-y-scroll flex flex-col items-start">
+      {renderedLinks}
+    </div>
+  )
 };
 
 export default Sidebar;
@@ -505,26 +518,26 @@ import classNames from "classnames";
 import useNavigation from "../hooks/use-navigation";
 
 const Link = ({ to, children, className, activeClassName }) => {
-	const { navigate, currentPath } = useNavigation();
+  const { navigate, currentPath } = useNavigation();
 
-	const classes = classNames(
-		"text-blue-500",
-		className,
-		currentPath === to && activeClassName
-	);
+  const classes = classNames(
+    "text-blue-500",
+    className,
+    currentPath === to && activeClassName
+  );
 
-	const handleClick = (event) => {
-		if (event.metaKey || event.ctrlKey) {
-			return;
-		}
-		event.preventDefault();
+  const handleClick = (event) => {
+    if (event.metaKey || event.ctrlKey) {
+      return;
+    }
+    event.preventDefault();
 
-		navigate(to);
-	}
+    navigate(to);
+  }
 
-	return (
-		<a className={classes} href={to} onClick={handleClick}>{children}</a>
-	);
+  return (
+    <a className={classes} href={to} onClick={handleClick}>{children}</a>
+  );
 };
 
 export default Link;
