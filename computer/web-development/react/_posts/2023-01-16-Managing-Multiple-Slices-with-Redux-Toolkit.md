@@ -25,39 +25,48 @@ title: "[React] Managing Multiple Slices with Redux Toolkit"
 - `CarList`: Show the list of cars matching with the search term.
 - `CarValue`: Sum of the total value of cars in the current list.
 
-# Thinking About Derived State
 
-## Redux Store Design
+# Redux Store Design
+
 1. Identify what state exists in the app.
 2. Identify how that state changes over time.
 3. Group together common pieces of state.
 4. Create a slice for each group.
 
-What State Do We Need?
-- name(string)
-- cost(number)
-- searchTerm(string)
-- cars(Array of { id, name, cost })
-- totalCost(number)
-- matchedCars(???)
+## States In Redux Store
 
-Derived State
-- Values that we can calculate using existing state.
-  - totalCost
-  - matchedCars
+This app needs the following states.
+- `name`: String
+- `cost`: Number
+- `searchTerm`: String
+- `cars`: Array of `{ id, name, cost }`
+- `totalCost`: Number
+- `matchedCars`: ???
+
+### Derived State
+
+- However, we can calculate the following states with existing state.
+  - `totalCost`
+  - `matchedCars`
 - Therefore, we don't need `totalCost` and `matchCars`.
-  - We only need `name`, `cost`, `searchTerm` and `cars`.
+  - We only need `name`, `cost`, `searchTerm` and `cars` states.
 
-# Thinking About Redux Design
+## Actions In Redux Store
 
-How do the states change over time?
-- change name
-- change cost
-- change search term
-- add car
-- remove car
+States and their corresponding actions.
+- `name` &rarr; change name
+- `cost` &rarr; change cost
+- `searchTerm` &rarr; change search term
+- `cars` &rarr; add car, remove car
+
+## Final Redux Store Design
 
 ![Redux State Design](https://i.imgur.com/0mf7ai6.png)
+
+Categorize states and actions into their role.
+- `name` and `cost` are related to editing the list of cars.
+- `searchTerm` and `cars` are related to showing the list of cars.
+
 
 # Adding the Form Slice
 
