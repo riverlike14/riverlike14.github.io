@@ -68,12 +68,14 @@ Categorize states and actions into their role.
 - `searchTerm` and `cars` are related to showing the list of cars.
 
 
-# Adding the Form Slice
+# Creating the Store
 
-- Form Slice
-  - name, cost, changeName, changeCost
-- Cars Slice
-  - searchTerm, cars, changeTerm, addCar, deleteCar
+Here, we focus on Redux side.
+
+## Form Slice
+
+- `name` &rarr; `changeName`
+- `cost` &rarr; `changeCost`
 
 ```jsx
 // "./store/slices/formSlice.js"
@@ -99,9 +101,10 @@ export const { changeName, changeCost } = formSlice.actions;
 export const formReducer = formSlice.reducer;
 ```
 
-# Maintaining a Collection with a Slice
+## Cars Slice
 
-A slice cannot directly read another slice's state.
+- `searchTerm` &rarr; `changeTerm`
+- `cars` &rarr; `addCar`, `removeCar`
 - `nanoid`: redux toolkit gives randomly generated id.
 
 ```jsx
@@ -120,7 +123,7 @@ const carsSlice = createSlice({
     },
     addCar(state, action) {
       state.cars.push({
-        id: nanoid() // Math.random() works as well
+        id: nanoid(), // Math.random() works fine
         name: action.payload.name,
         cost: action.payload.cost
       })
@@ -138,224 +141,149 @@ export const { changeSearchTerm, addCar, removeCar } = carsSlice.actions;
 export const carsReducer = carsSlice.reducer;
 ```
 
-# Creating the Store
+## Creating the Store
 
-```jsx
-// "./store/index.js"
-import { configureStore } from "@reduxjs/toolkit";
-import { carsReducer, addCar, removeCar, changeSearchTerm } from "./slices/carsSlice";
-import { formReducer, changeName, changeCost } from "./slices/formSlice";
+- `./store/index.js` file
+- ```jsx
+  // "./store/index.js"
+  import { configureStore } from "@reduxjs/toolkit";
+  import { carsReducer, addCar, removeCar, changeSearchTerm } from "./slices/carsSlice";
+  import { formReducer, changeName, changeCost } from "./slices/formSlice";
 
-const store = configureStore({
-  reducer: {
-    cars: carsReducer,
-    form: formReducer
-  }
-});
+  const store = configureStore({
+    reducer: {
+      cars: carsReducer,
+      form: formReducer
+    }
+  });
 
-export {
-  store,
-  changeName,
-  changeCost,
-  addCar,
-  removeCar,
-  changeSearchTerm
-};
-```
+  export {
+    store,
+    changeName,
+    changeCost,
+    addCar,
+    removeCar,
+    changeSearchTerm
+  };
+  ```
+- `./index.js` file
+- ```jsx
+  // "./index.js"
+  import React from 'react';
+  import ReactDOM from 'react-dom/client';
+  import { Provider } from "react-redux";
+  import { store } from "./store";
+  import App from './App';
 
-```jsx
-// "./index.js"
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { Provider } from "react-redux";
-import { store } from "./store";
-import App from './App';
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
-);
-```
-
-Redux side until now... Now we are going to work on the React side.
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </React.StrictMode>
+  );
+  ```
 
 # Form Values to Update State
 
+Now we focus on React side, especially handling car's name and cost elements.
+- It is very similar to [handling controlled components](https://riverlike14.github.io/computer/web-development/react/Using-an-API-with-React/#handling-input-elements).
+
+**Changing State Process**
+
 ![Redux Changing State Design](https://i.imgur.com/nCWFUUT.png)
+1. Add a reducer to one of your slices that changes state in some particular way.
+2. Export the action creator that the slice automatically creates.
+3. Find the component that you want to dispatch from.
+4. Import the action creator function and `useDispatch` from react-redux.
+5. Call the `useDispatch` hook to get access to the dispatch function.
+6. When the user does something, call the action creator to get an action, then dispatch it.
+
+**Accessing State Process**
 
 ![Redux Accessing State Desigin](https://i.imgur.com/TJlSApq.png)
+1. Find the component that needs to access some state.
+2. Import the `useSelector` hook from react-redux.
+3. Call the hook, passing in a selector function.
+4. Use the state! Anytime state changes, the component will automatically rerender.
 
-```jsx
-// "./components/CarForm.js"
-import { useDispatch, useSelector } from "react-redux";
-import { changeName } from "../store";
-
-const CarForm = () => {
-  const dispatch = useDispatch();
-  const name = useSelector(state => {
-    return state.form.name;
-  });
-
-  const handleNameChange = (event) => {
-    dispatch(changeName(event.target.value));
-  };
-
-  return (
-    <div className="car-form panel">
-      <h4 className="subtitle is-3">Add Car</h4>
-      <form>
-        <div className="field-group">
-          <div className="field">
-            <label className="label">Name</label>
-            <input
-              className="input is-expanded"
-              value={name}
-              onChange={handleNameChange}
-            />
-          </div>
-        </div>
-      </form>
-    </div>
-  );
-};
-
-export default CarForm;
-```
-
-# Receiving the Cost
-
-- Import `changeCost`
-- Edit line 7~12: Destructure state.form into name and cost
-- Add line 18~21: New `handleCostChange` function
-- Add line 36~44: Cost input field
-
-```jsx
-// "./components/CarForm.js"
-import { useDispatch, useSelector } from "react-redux";
-import { changeName, changeCost } from "../store";
-
-const CarForm = () => {
-  const dispatch = useDispatch();
-  const { name, cost } = useSelector(state => {
-    return { 
-      name: state.form.name,
-      cost: state.form.cost
-    }
-  });
-
-  const handleNameChange = (event) => {
-    dispatch(changeName(event.target.value));
-  };
-
-  const handleCostChange = (event) => {
-    const carCost = parseInt(event.target.value) || 0;
-    dispatch(changeCost(carCost));
-  }
-
-  return (
-    <div className="car-form panel">
-      <h4 className="subtitle is-3">Add Car</h4>
-      <form>
-        <div className="field-group">
-          <div className="field">
-            <label className="label">Name</label>
-            <input
-              className="input is-expanded"
-              value={name}
-              onChange={handleNameChange}
-            />
-          </div>
-          <div className="field">
-            <label className="label">Cost</label>
-            <input
-              className="input is-expanded"
-              value={cost || ''}
-              onChange={handleCostChange}
-              type="number"
-            />
-          </div>
-        </div>
-      </form>
-    </div>
-  );
-};
-
-export default CarForm;
-```
-
-# Dispatching During the Form Submission
-
-- Import `addCar`
-- Add line 23~26: dispatch `addCar`
-- Edit line 31, 51~53: Create Submit button
-
-```jsx
-// "./components/CarForm.js"
-import { useDispatch, useSelector } from "react-redux";
-import { changeName, changeCost, addCar } from "../store";
-
-const CarForm = () => {
-  const dispatch = useDispatch();
-  const { name, cost } = useSelector(state => {
-    return { 
-      name: state.form.name,
-      cost: state.form.cost
-    }
-  });
-
-  const handleNameChange = (event) => {
-    dispatch(changeName(event.target.value));
-  };
-
-  const handleCostChange = (event) => {
-    const carCost = parseInt(event.target.value) || 0;
-    dispatch(changeCost(carCost));
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    dispatch(addCar({ name: name, cost: cost }));
-  };
-
-  return (
-    <div className="car-form panel">
-      <h4 className="subtitle is-3">Add Car</h4>
-      <form onSubmit={handleSubmit}>
-        <div className="field-group">
-          <div className="field">
-            <label className="label">Name</label>
-            <input
-              className="input is-expanded"
-              value={name}
-              onChange={handleNameChange}
-            />
-          </div>
-          <div className="field">
-            <label className="label">Cost</label>
-            <input
-              className="input is-expanded"
-              value={cost || ''}
-              onChange={handleCostChange}
-              type="number"
-            />
-          </div>
-        </div>
-        <div className="field">
-          <button className="button is-link">Submit</button>
-        </div>
-      </form>
-    </div>
-  );
-};
-
-export default CarForm;
-```
+## Car's Form Value Design
 
 ![Tentative Results](https://imgur.com/JariskZ.png)
+
+- `handleNameChange`
+  - When user changes name in the form, `handleNameChange` dispatches the change.
+  - Import `changeName`.
+  - Receive `name` value through `useSelector` hook.
+- `handleCostChange`
+  - When user changes cost in the form, `handleCostChange` dispatches the change.
+  - Import `changeCost`.
+  - Receive `cost` value through `useSelector` hook.
+- `handleSubmit`
+  - Dispatch the form when submitted.
+  - Import `addCar`.
+- ```jsx
+  // "./components/CarForm.js"
+  import { useDispatch, useSelector } from "react-redux";
+  import { changeName, changeCost, addCar } from "../store";
+
+  const CarForm = () => {
+    const dispatch = useDispatch();
+    const { name, cost } = useSelector(state => {
+      return { 
+        name: state.form.name,
+        cost: state.form.cost
+      }
+    });
+
+    const handleNameChange = (event) => {
+      dispatch(changeName(event.target.value));
+    };
+
+    const handleCostChange = (event) => {
+      const carCost = parseInt(event.target.value) || 0;
+      dispatch(changeCost(carCost));
+    };
+
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      dispatch(addCar({ name: name, cost: cost }));
+    };
+
+    return (
+      <div className="car-form panel">
+        <h4 className="subtitle is-3">Add Car</h4>
+        <form onSubmit={handleSubmit}>
+          <div className="field-group">
+            <div className="field">
+              <label className="label">Name</label>
+              <input
+                className="input is-expanded"
+                value={name}
+                onChange={handleNameChange}
+              />
+            </div>
+            <div className="field">
+              <label className="label">Cost</label>
+              <input
+                className="input is-expanded"
+                value={cost || ''}
+                onChange={handleCostChange}
+                type="number"
+              />
+            </div>
+          </div>
+          <div className="field">
+            <button className="button is-link">Submit</button>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
+  export default CarForm;
+  ```
 
 # Awkward Double Keys
 
