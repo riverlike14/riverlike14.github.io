@@ -143,7 +143,7 @@ export const carsReducer = carsSlice.reducer;
 
 ## Creating the Store
 
-- `./store/index.js` file
+`./store/index.js` file
 - ```jsx
   // "./store/index.js"
   import { configureStore } from "@reduxjs/toolkit";
@@ -166,7 +166,8 @@ export const carsReducer = carsSlice.reducer;
     changeSearchTerm
   };
   ```
-- `./index.js` file
+
+`./index.js` file
 - ```jsx
   // "./index.js"
   import React from 'react';
@@ -177,11 +178,9 @@ export const carsReducer = carsSlice.reducer;
 
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(
-    <React.StrictMode>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
   );
   ```
 
@@ -214,11 +213,11 @@ Now we focus on React side, especially handling car's name and cost elements.
 
 - `handleNameChange`
   - When user changes name in the form, `handleNameChange` dispatches the change.
-  - Import `changeName`.
+  - Import `changeName` action creator.
   - Receive `name` value through `useSelector` hook.
 - `handleCostChange`
   - When user changes cost in the form, `handleCostChange` dispatches the change.
-  - Import `changeCost`.
+  - Import `changeCost` action creator.
   - Receive `cost` value through `useSelector` hook.
 - `handleSubmit`
   - Dispatch the form when submitted.
@@ -285,244 +284,178 @@ Now we focus on React side, especially handling car's name and cost elements.
   export default CarForm;
   ```
 
-# Awkward Double Keys
+# Rendering List of Cars and Additional Functions
 
-```jsx
-// "./components/CarList.js"
-import { useSelector } from "react-redux";
+It is time to render list of cars slice.
+- CarList component must be able to add and delete a car from the record.
 
-const CarList = () => {
-  const cars = useSelector(state => {
-    return state.cars.cars
-  });
+## Awkward Double Keys
 
-  return (
-    <div>CarList</div>
-  );
-};
+Before we render list of cars, we run into a tedious naming problem that will bother you.
+- ![State Object in the Store](https://i.imgur.com/1MWMj0v.png)
+- Cars slice has two states, `searchTerm` and `cars`.
+  - The variable name `state.cars.cars` is awkward.
+- Change `cars` in `cars` slice into a more general name, `data`.
+- ```js
+  // "./store/slices/carsSlice.js"
+  import { createSlice, nanoid } from "@reduxjs/toolkit";
 
-export default CarList;
-```
-
-- line 6, variable `state.cars.cars` name is awkward...
-
-![State Object in the Store](https://i.imgur.com/1MWMj0v.png)
-
-- Change `cars` into `data`, which is more general name.
-
-```js
-// "./store/slices/carsSlice.js"
-import { createSlice, nanoid } from "@reduxjs/toolkit";
-
-const carsSlice = createSlice({
-  name: "cars",
-  initialState: {
-    searchTerm: "",
-    data: []
-  },
-  reducers: {
-    changeSearchTerm(state, action) {
-      state.searchTerm = action.payload;
+  const carsSlice = createSlice({
+    name: "cars",
+    initialState: {
+      searchTerm: "",
+      data: [] // More general variable name.
     },
-    addCar(state, action) {
-      state.data.push({
-        id: nanoid(),
-        name: action.payload.name,
-        cost: action.payload.cost
-      })
-    },
-    removeCar(state, action) {
-      const updated = state.data.filter(car => {
-        return car.id !== action.payload;
-      })
-      state.data = updated;
-    }
-  }
-});
-
-export const { changeSearchTerm, addCar, removeCar } = carsSlice.actions;
-export const carsReducer = carsSlice.reducer;
-```
-
-# Listing the Records
-
-```jsx
-// "./components/CarList.js"
-import { useSelector } from "react-redux";
-
-const CarList = () => {
-  const cars = useSelector(state => {
-    return state.cars.data;
+    // ...
   });
 
-  const renderedCars = cars.map(car => {
-    return (
-      <div key={car.id} className="panel">
-        <p>
-          {car.name} - ${car.cost}
-        </p>
-        <button className="button is-danger">
-          Delete
-        </button>
-      </div>
-    )
-  })
+  export const { changeSearchTerm, addCar, removeCar } = carsSlice.actions;
+  export const carsReducer = carsSlice.reducer;
+  ```
 
-  return (
-    <div className="car-list">
-      {renderedCars}
-      <hr />
-    </div>
-  );
-};
-
-export default CarList;
-```
-
-# Deleting Records
-
-- import useDispatch
-- import action creator removeCar
-- add `handleCarDelete` function
-
-```jsx
-// "./components/CarList.js"
-import { useSelector, useDispatch } from "react-redux";
-import { removeCar } from "../store";
-
-const CarList = () => {
-  const dispatch = useDispatch();
-
-  const cars = useSelector(state => {
-    return state.cars.data;
-  });
-
-  const handleCarDelete = (car) => {
-    dispatch(removeCar(car.id));
-  }
-
-  const renderedCars = cars.map(car => {
-    return (
-      <div key={car.id} className="panel">
-        <p>
-          {car.name} - ${car.cost}
-        </p>
-        <button
-          className="button is-danger"
-          onClick={() => handleCarDelete(car)}
-        >
-          Delete
-        </button>
-      </div>
-    )
-  })
-
-  return (
-    <div className="car-list">
-      {renderedCars}
-      <hr />
-    </div>
-  );
-};
-
-export default CarList;
-```
+## CarList Component Design
 
 ![Tentative Result 2](https://imgur.com/rK6o4Aa.png)
 
+- `renderedCars`
+  - Render list the records of cars.
+- `handleCarDelete`
+  - Remove a car from the records.
+  - Import `removeCar` action creator.
+
+- ```jsx
+  // "./components/CarList.js"
+  import { useSelector, useDispatch } from "react-redux";
+  import { removeCar } from "../store";
+
+  const CarList = () => {
+    const dispatch = useDispatch();
+
+    const cars = useSelector(state => {
+      return state.cars.data;
+    });
+
+    const handleCarDelete = (car) => {
+      dispatch(removeCar(car.id));
+    }
+
+    const renderedCars = cars.map(car => {
+      return (
+        <div key={car.id} className="panel">
+          <p>
+            {car.name} - ${car.cost}
+          </p>
+          <button
+            className="button is-danger"
+            onClick={() => handleCarDelete(car)}
+          >
+            Delete
+          </button>
+        </div>
+      )
+    })
+
+    return (
+      <div className="car-list">
+        {renderedCars}
+        <hr />
+      </div>
+    );
+  };
+
+  export default CarList;
+  ```
+
 # Adding Styling
 
-- New CSS file
-- Add this css in "./index.js" file
-
-```css
-/* "./styles.css" */
-.car-form {
-  margin-top: 15px;
-  padding: 15px;
-}
-.car-form .field-group {
-  display: flex;
-  margin-bottom: 0px;
-}
-.car-form form {
-  display: flex;
-  justify-content: space-between;
-}
-.car-form .field {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0px;
-  margin-right: 10px;
-}
-.car-form .field label.label {
-  margin-bottom: 0px;
-  width: 70px;
-}
-.car-form input {
-  width: 100%;
-}
-.car-form h4.subtitle.is-3 {
-  margin-bottom: 0.75rem;
-}
-
-.car-list .panel.bold {
-  font-weight: 600;
-}
-
-.car-list .panel {
-  padding: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.car-list p {
-  font-size: 1.5rem;
-}
-
-.car-list .note {
-  font-style: italic;
-  display: block;
-  margin: 40px 20px;
-}
-
-.car-value {
-  font-size: 2rem;
-  text-align: right;
-}
-
-hr {
-  margin: 1rem 0;
-}
-
-.list-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.list-header h3.title {
-  margin-bottom: 0px;
-}
-
-.list-header .search {
-  display: flex;
-  align-items: center;
-}
-.list-header .search .label {
-  margin-bottom: 0px;
-  margin-right: 10px;
-}
-```
-
-- "./index.js"
+- `./index.js`
   - `import "bulma/css/bulma.css";`
   - `import "./styles.css";`
-- "./App.js"
-  - topmost div: `<div className="container is-fluid>"`
+- `./App.js`
+  - Change topmost `div` element into `<div className="container is-fluid>"`.
+- `./styles.css`
+  - ```css
+    /* "./styles.css" */
+    .car-form {
+      margin-top: 15px;
+      padding: 15px;
+    }
+    .car-form .field-group {
+      display: flex;
+      margin-bottom: 0px;
+    }
+    .car-form form {
+      display: flex;
+      justify-content: space-between;
+    }
+    .car-form .field {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0px;
+      margin-right: 10px;
+    }
+    .car-form .field label.label {
+      margin-bottom: 0px;
+      width: 70px;
+    }
+    .car-form input {
+      width: 100%;
+    }
+    .car-form h4.subtitle.is-3 {
+      margin-bottom: 0.75rem;
+    }
+
+    .car-list .panel.bold {
+      font-weight: 600;
+    }
+
+    .car-list .panel {
+      padding: 10px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .car-list p {
+      font-size: 1.5rem;
+    }
+
+    .car-list .note {
+      font-style: italic;
+      display: block;
+      margin: 40px 20px;
+    }
+
+    .car-value {
+      font-size: 2rem;
+      text-align: right;
+    }
+
+    hr {
+      margin: 1rem 0;
+    }
+
+    .list-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .list-header h3.title {
+      margin-bottom: 0px;
+    }
+
+    .list-header .search {
+      display: flex;
+      align-items: center;
+    }
+    .list-header .search .label {
+      margin-bottom: 0px;
+      margin-right: 10px;
+    }
+    ```
 
 # Form Reset on Submission
 
