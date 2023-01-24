@@ -189,6 +189,8 @@ export const carsReducer = carsSlice.reducer;
 Now we focus on React side, especially handling car's name and cost elements.
 - It is very similar to [handling controlled components](https://riverlike14.github.io/computer/web-development/react/Using-an-API-with-React/#handling-input-elements).
 
+## Basic Process of Changing and Accessing State
+
 **Changing State Process**
 
 ![Redux Changing State Design](https://i.imgur.com/nCWFUUT.png)
@@ -459,90 +461,83 @@ Before we render list of cars, we run into a tedious naming problem that will bo
 
 # Form Reset on Submission
 
-When we submit the new car, the name and the cost still remain.
+When we submit the new car, the `name` and the `cost` still remain.
 - Want to reset the values whenever user submitted the form.
-- Calling dispatch multiple times in a single event handler is a sign that we can improve this.
+- Calling `changeName('')` and `changeCost('')` when submitted is not a good solution.
+  - Calling dispatch multiple times in a single event handler is a sign that we can improve this.
+
+## Extra Reducers technique
 
 ![Refactor Actions in Reducers](https://i.imgur.com/YQQDmzh.png)
+- Tells Form combined reducer that *it also needs to watch* `cars/addCar` *action type.*
+- Whenever it sees this type, reset name and cost.
 
-Extra Reducers technique
-- Tells Form combined reducer that it also needs to watch "cars/addCar" action type.
-- Whenever it sees this type, reset name and cost to "" and 0.
+## Add `extraReducers` in Form Slice
 
-# Reminder on ExtraReducers
+- Import `addCar` so that `formSlice` can watch this action creator.
+- ```js
+  // "./store/slices/formSlice.js"
+  import { createSlice } from "@reduxjs/toolkit";
+  import { addCar } from "./carsSlice"; // formSlice needs to watch this.
 
-- import addCar
-- Add line 18~23: extraReducers technique
-
-```js
-// "./store/slices/formSlice.js"
-import { createSlice } from "@reduxjs/toolkit";
-import { addCar } from "./carsSlice";
-
-const formSlice = createSlice({
-  name: "form",
-  initialState: {
-    name: "",
-    cost: 0
-  },
-  reducers: {
-    changeName(state, action) {
-      state.name = action.payload;
-    },
-    changeCost(state, action) {
-      state.cost = action.payload;
+  const formSlice = createSlice({
+    name: "form",
+    // ...
+    extraReducers(builder) {
+      builder.addCase(addCar, (state, action) => {
+        state.name = "";
+        state.cost = 0;
+      });
     }
-  },
-  extraReducers(builder) {
-    builder.addCase(addCar, (state, action) => {
-      state.name = "";
-      state.cost = 0;
-    });
-  }
-});
+  });
 
-export const { changeName, changeCost } = formSlice.actions;
-export const formReducer = formSlice.reducer;
-```
+  export const { changeName, changeCost } = formSlice.actions;
+  export const formReducer = formSlice.reducer;
+  ```
 
 # Adding a Searching Input
 
-```jsx
-// "./components/CarSearch.js"
-import { useDispatch, useSelector } from "react-redux";
-import { changeSearchTerm } from "../store";
+Create a boiler plate of car search bar.
+- When user changes search term, `handleSearchTermChange` dispatches the change.
+- ```jsx
+  // "./components/CarSearch.js"
+  import { useDispatch, useSelector } from "react-redux";
+  import { changeSearchTerm } from "../store";
 
-const CarSearch = () => {
-  const dispatch = useDispatch();
-  const searchTerm = useSelector((state) => {
-    return state.cars.searchTerm;
-  });
+  const CarSearch = () => {
+    const dispatch = useDispatch();
+    const searchTerm = useSelector((state) => {
+      return state.cars.searchTerm;
+    });
 
-  const handleSearchTermChange = (event) => {
-    dispatch(changeSearchTerm(event.target.value));
+    const handleSearchTermChange = (event) => {
+      dispatch(changeSearchTerm(event.target.value));
+    };
+
+    return (
+      <div className="list-header">
+        <h3 className="title is-3">My Cars</h3>
+        <div className="search field is-horizontal">
+          <label className="label">Search</label>
+          <input
+            className="input"
+            value={searchTerm}
+            onChange={handleSearchTermChange}
+          />
+        </div>
+      </div>
+    );
   };
 
-  return (
-    <div className="list-header">
-      <h3 className="title is-3">My Cars</h3>
-      <div className="search field is-horizontal">
-        <label className="label">Search</label>
-        <input
-          className="input"
-          value={searchTerm}
-          onChange={handleSearchTermChange}
-        />
-      </div>
-    </div>
-  );
-};
+  export default CarSearch;
+  ```
 
-export default CarSearch;
-```
-
-# Derived State in useSelector
+## Derived State in useSelector
 
 ![Derived state filteredCars](https://i.imgur.com/PmTdEy9.png)
+
+- `CarList` only renders a list of cars with matching names.
+  - Combine `cars.data` with `cars.searchTerm` to derive `filteredCars`.
 
 ```jsx
 // "./components/CarList.js"
@@ -556,46 +551,50 @@ const CarList = () => {
       return car.name.toLowerCase().includes(searchTerm.toLowerCase());
     })
   });
-// ...
+  // ...
 };
 
 export default CarList;
 ```
 
-# Total Car Cost
+## Total Car Cost
 
-- reduce: javascript way to sum up
-  - 0: initial value of acc
-  - `let cost = 0; for (let car of filteredCars) { cost += car.cost }`
+`reduce`: Javascript-style way to sum up.
+- 0: Initial value of acc(umulator).
+- ```jsx
+  // "./components/CarValue.js"
+  import { useSelector } from "react-redux";
 
-```jsx
-// "./components/CarValue.js"
-import { useSelector } from "react-redux";
+  const CarValue = () => {
+    const totalCost = useSelector(({ cars: { data, searchTerm } }) => {
+      const filteredCars = data.filter((car) => 
+        car.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      return filteredCars.reduce((acc, car) => acc + car.cost, 0);
+      /*
+        let cost = 0;
+        for (let car of filteredCars) {
+          cost += car.cost;
+        }
+        return cost;
+      */
+    })
 
-const CarValue = () => {
-  const totalCost = useSelector(({ cars: { data, searchTerm } }) => {
-    const filteredCars = data.filter((car) => 
-      car.name.toLowerCase().includes(searchTerm.toLowerCase())
+    return (
+      <div className="car-value">
+        Total Cost: ${totalCost}
+      </div>
     );
-    return filteredCars.reduce((acc, car) => acc + car.cost, 0);
-  })
+  };
 
-  return (
-    <div className="car-value">
-      Total Cost: ${totalCost}
-    </div>
-  );
-};
+  export default CarValue;
+  ```
 
-export default CarValue;
-```
-
-# Highlighting Existing Cars
+## Highlighting Existing Cars
 
 ![Bad data model](https://i.imgur.com/OiUcZ3W.png)
 
 - Get `name` variable from `useSelector` as well as car list.
- /
 
 ```jsx
 // "./components/CarList.js"
