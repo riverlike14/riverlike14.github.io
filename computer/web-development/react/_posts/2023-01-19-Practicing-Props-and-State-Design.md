@@ -47,7 +47,7 @@ A list of object with information would be a possible design.
 
 State Design Process
 
-### Step 1
+**Step 1**
 
 How would a user describe this app step by step?
 - Clicking the dropdown
@@ -56,7 +56,7 @@ How would a user describe this app step by step?
 - List of options disappears
 - Item clicked appears in the box
 
-### Step 2
+**Step 2**
 
 Categorize each step as state or event handler.
 - Clicking the dropdown &rarr; **Event handler**
@@ -65,7 +65,7 @@ Categorize each step as state or event handler.
 - List of options disappears &rarr; **State**
 - Item clicked appears in the box &rarr; **State**
 
-### Step 3
+**Step 3**
 
 Group common steps. Remove duplicates. Rewrite descriptions.
 - Clicking the dropdown &rarr; **Event handler**
@@ -79,24 +79,24 @@ Group common steps. Remove duplicates. Rewrite descriptions.
 - Click an option &rarr; **Event Handler**
 - Click the dropdown &rarr; **Event Handler**
 
-### Step 4
+**Step 4**
 
 Look at mockup. Remove or simplify parts that aren't changing.
 
 - ![Remove everything that does not change](https://i.imgur.com/rdUhQvK.png)
 
-### Step 5
+**Step 5**
 
 Replace remaining elements with text descriptions
 - Menu closed, no option selected
 - Menu open, no option selected
 - Menu closed, an option selected
 
-### Step 6
+**Step 6**
 
 Repeat step 4 and step 5 with a different variation.
 
-### Step 7
+**Step 7**
 
 Imagine you have to write a function that returns the text of steps 5 and 6. In addition to your component props, *what other arguments would you need?*
 
@@ -119,7 +119,7 @@ myFunction(opts, /* ??? */);
 - Which item is selected?
   - `selected` with Option or null type
 
-### Step 8
+**Step 8**
 
 Decide where each event handler + state will be defined.
 - ![State location](https://i.imgur.com/c5GLHIf.png)
@@ -131,6 +131,7 @@ Decide where each event handler + state will be defined.
 ## Initial Design of `<App />` and `<Dropdown />` Components.
 
 `<App />` Component:
+
 - ```jsx
   // "./App.js"
   import Dropdown from "./components/Dropdown";
@@ -149,6 +150,7 @@ Decide where each event handler + state will be defined.
   ```
 
 `<Dropdown />` Component:
+
 - ```jsx
   // "./components/Dropdown.js"
   import { useState } from "react";
