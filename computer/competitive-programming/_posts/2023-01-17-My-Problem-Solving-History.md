@@ -47,6 +47,11 @@ Last Updated: 2023년 1월 25일.
   - 결과: 성공
   - 시도: 1
   - 마찬가지로 LIS를 세그먼트 트리로 푸는 아이디어를 활용. 수열의 길이마다 세그먼트 트리를 만들어 주면 됨. 세그먼트 트리와 DP의 조화를 느낄 수 있는 문제라 했지만 나는 고생만 한 기억밖에...
+- [서로 다른 수와 쿼리 1](https://www.acmicpc.net/problem/14897)
+  - 난이도: Platinum 2
+  - 결과: 10min, 성공
+  - 시도: 1
+  - 좌표만 압축해주면 [수열과 쿼리 5](https://www.acmicpc.net/problem/13547)랑 똑같은 문제.
 
 1월 24일.
 - [수열과 쿼리 5](https://www.acmicpc.net/problem/13547)
