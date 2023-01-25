@@ -11,6 +11,15 @@ title: "[React] Practicing Props and State Design"
 ## Features
 
 - Design dropdown through state design process.
+- Implement controlled component.
+- Props naming convention.
+- Event capturing, event bubbling.
+- `useRef` hook.
+
+## Installed Libraries
+
+- `tailwindcss`
+- `react-icons`
 
 # Designing the Props
 
@@ -99,7 +108,7 @@ Imagine you have to write a function that returns the text of steps 5 and 6. In 
   ];
 
   const myFunction = (options, /* ??? */) => {
-    
+    //
   };
 
   myFunction(opts, /* ??? */);
@@ -263,620 +272,372 @@ We can edit our `Dropdown.js` code as below.
 # Community Convention with Props Names
 
 Every component we make that shows a "form control" will follow this pattern.
-- Extremely common patterns:
-- Call the "current value" prop `value`.
-- Call the "value changed" prop `onChange`.
 
 ![Bad convention with props name](https://i.imgur.com/yKCuj40.png)
 
-Bad event handler naming convention.
-- `onSelect`, `onChange`, `onCheck`, ...
-- "Form control" components, but prop names are different.
-- Prop names are hard to remember.
+- Extremely common patterns:
+  - Call the "current value" prop `value`.
+  - Call the "value changed" prop `onChange`.
+
+On the other hand, this is bad naming convention of event handlers.
 
 ![Good convention with props name](https://i.imgur.com/RSlRCXO.png)
+
+- "Form control" components, but prop names are different.
+  - `onSelect`, `onChange`, `onCheck`, ...
+  - Prop names are hard to remember.
 
 Preferred naming convention.
 - Although each events are different, call all the event handlers `onChange`.
 - Same prop names for all form control components.
-- The prop name is easy to remember.
+  - The prop name is easy to remember.
 
 # Panel Component
 
-```jsx
-// "./components/Dropdown.js"
-import { useState } from "react";
-import { FiChevronDown } from "react-icons/fi";
+Encounters a problem while adding some style.
 
-const Dropdown = ({ options, value, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsOpen(currentIsOpen => !currentIsOpen);
-    // setIsOpen(!isOpen);
-  }
-
-  const handleOptionClick = (option) => {
-    setIsOpen(false);
-    onChange(option);
-  }
-
-  const renderedOptions = options.map(option => {
-    return (
-      <div
-        className="hover:bg-sky-100 rounded cursor-pointer p-1"
-        onClick={() => handleOptionClick(option)}
-        key={option.value}
-      >
-        {option.label}
-      </div>
-    );
-  })
-
-  return (
-    <div className="w-48 relative">
-      <div
-        className="flex justify-between items-center cursor-pointer border rounded p-3 shadow bg-white w-full"
-        onClick={handleClick}
-      >
-        {value?.label || "Select..."}
-        <FiChevronDown className="text-lg"/>
-      </div>
-      {isOpen && <div className="absolute top-full border rounded p-3 shadow bg-white w-full">{renderedOptions}</div>}
-    </div>
-  )
-};
-
-export default Dropdown;
-```
-
-- class name is very long
-- some of the class names are duplicated
+- `className` is too long.
+- Some of the class names are duplicated.
   - `border rounded p-3 shadow bg-white w-full`
+  - In other words, some component is being repeated. We have to create it as a distinct component.
+- ```jsx
+  // "./components/Dropdown.js"
+  import { useState } from "react";
+  import { FiChevronDown } from "react-icons/fi";
+
+  const Dropdown = ({ options, value, onChange }) => {
+    //...
+    const renderedOptions = options.map(option => {
+      return (
+        <div
+          className="hover:bg-sky-100 rounded cursor-pointer p-1"
+          onClick={() => handleOptionClick(option)}
+          key={option.value}
+        >
+          {option.label}
+        </div>
+      );
+    })
+
+    return (
+      <div className="w-48 relative">
+        <div
+          className="flex justify-between items-center cursor-pointer border rounded p-3 shadow bg-white w-full"
+          onClick={handleClick}
+        >
+          {value?.label || "Select..."}
+          <FiChevronDown className="text-lg"/>
+        </div>
+        {isOpen && <div className="absolute top-full border rounded p-3 shadow bg-white w-full">{renderedOptions}</div>}
+      </div>
+    )
+  };
+
+  export default Dropdown;
+  ```
 
 ## Panel Component
 
 ![Panel componnet with tailwind](https://i.imgur.com/9jhCkGp.png)
 
-Issues
-- pass down classname
-- pass down all the rest event handlers
+Repeat what you do [when you create a button component](https://riverlike14.github.io/computer/web-development/react/React-Creating-Button-Component/#issues-with-passing-props).
+- Pass down `className`.
+- Pass down all the rest of props, especially event handlers.
 
-## Creating The Reusable Panel
+## Creating the Reusable Panel
 
-```jsx
-// "./components/Panel.js"
-import classNames from "classnames";
+- The Panel component is of little help.
+- But it shows user a consistent styling of the web page.
+- ```jsx
+  // "./components/Panel.js"
+  import classNames from "classnames";
 
-const Panel = ({ children, className, ...rest }) => {
-  const finalClassNames = classNames(
-    "border rounded p-3 shadow bg-white w-full",
-    className
-  );
+  const Panel = ({ children, className, ...rest }) => {
+    const finalClassNames = classNames(
+      "border rounded p-3 shadow bg-white w-full",
+      className
+    );
 
-  return (
-    <div {...rest} className={finalClassNames}>
-      {children}
-    </div>
-  );
-};
-
-export default Panel;
-```
-
-```jsx
-// "./components/Dropdown.js"
-import { useState } from "react";
-import { FiChevronDown } from "react-icons/fi";
-import Panel from "./Panel";
-
-const Dropdown = ({ options, value, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsOpen(currentIsOpen => !currentIsOpen);
-    // setIsOpen(!isOpen);
-  }
-
-  const handleOptionClick = (option) => {
-    setIsOpen(false);
-    onChange(option);
-  }
-
-  const renderedOptions = options.map(option => {
     return (
-      <div
-        className="hover:bg-sky-100 rounded cursor-pointer p-1"
-        onClick={() => handleOptionClick(option)}
-        key={option.value}
-      >
-        {option.label}
+      <div {...rest} className={finalClassNames}>
+        {children}
       </div>
     );
-  })
+  };
 
-  return (
-    <div className="w-48 relative">
-      <Panel
-        className="flex justify-between items-center cursor-pointer" 
-        onClick={handleClick}
-      >
-        {value?.label || "Select..."}
-        <FiChevronDown className="text-lg"/>
-      </Panel>
-      {isOpen && <Panel className="absolute top-full">{renderedOptions}</Panel>}
-    </div>
-  )
-};
+  export default Panel;
+  ```
+- ```jsx
+  // "./components/Dropdown.js"
+  import { useState } from "react";
+  import { FiChevronDown } from "react-icons/fi";
+  import Panel from "./Panel";
 
-export default Dropdown;
-```
+  const Dropdown = ({ options, value, onChange }) => {
+    //...
+    return (
+      <div className="w-48 relative">
+        <Panel
+          className="flex justify-between items-center cursor-pointer" 
+          onClick={handleClick}
+        >
+          {value?.label || "Select..."}
+          <FiChevronDown className="text-lg"/>
+        </Panel>
+        {isOpen && <Panel className="absolute top-full">{renderedOptions}</Panel>}
+      </div>
+    )
+  };
 
-- Panel does very little thing
-- But, we now have a consistent styling
+  export default Dropdown;
+  ```
 
 # A Challenging Extra Feature
 
-```jsx
-// "./App.js"
-import { useState } from "react";
-import Dropdown from "./components/Dropdown";
-
-const App = () => {
-  const [selection, setSelection] = useState(null);
-
-  const handleSelect = (option) => {
-    setSelection(option);
-  }
-
-  const options = [
-    { label: "Red", value: "red" },
-    { label: "Green", value: "green" },
-    { label: "Blue", value: "blue" },
-  ]
-
-  return (
-    <div className="flex">
-      <Dropdown options={options} value={selection} onChange={handleSelect} />
-      <Dropdown options={options} value={selection} onChange={handleSelect} />
-    </div>
-  );
-}
-
-export default App;
-```
-
 ![Dropdown does not close](https://imgur.com/M6l9kkU.png)
 
-- Open two dropdown possible.
-  - Become very messy
-  - Need to add a feature that automatically close the dropdown when clicked anywhere but the dropdown itself.
-- Dropdown ***cannot*** listen to clicks on elements created by Button ***using the onClick technique we've seen***
+A dropdown needs to be closed automatically when user clicks anywhere but the dropdown itself.
+- Otherwise, there could be many open dropdowns, which becomes very messy.
+- However, it is a very challenging feature.
+  - Dropdown ***cannot*** listen to clicks on elements created by Button ***using the onClick technique we've seen***.
+- A brand-new technique is needed.
 
-
-# Document-Wide Click Handlers
+## Document-Wide Click Handlers
 
 ![Handle event outside of the component](https://i.imgur.com/GcDHQtL.png)
 
-```js
-const handleClick = (event) => {
-  console.log(event.target);
-};
+- `event.target` tells us which element was clicked on.
+- `document.addEventListener("click", handleClick);` watches for a click on *any* element.
+- ```js
+  const handleClick = (event) => {
+    console.log(event.target);
+  };
 
-document.addEventListener("click", handleClick);
-```
+  document.addEventListener("click", handleClick);
+  ```
 
-- `event.target`: Tells us which element was clicked on
-- `document.addEventListener("click", handleClick);`: Watches for a click on *any* element
-
-
-# Event Capture and Bubbling
-
-- When an event occurs, browser wants to find event handlers to call
-- order in which this search occurs is divided into three phases
-
-![Event search phase](https://i.imgur.com/hOFKSVu.png)
-
-- Usually ignore Capture phase
-- But, in this case we have to learn capture phase
-
-```html
-<body>
-  <div>
-    <button>
-      Click Me!
-    </button>
-  </div>
-</body>
-```
+## Event Capture and Bubbling
 
 ![Event phase](https://i.imgur.com/sSZuFc4.png)
 
-1. Capture phase
-- Go to *most parent* of clicked element, see if it has handler. Go to *second most parnet*... etc.
-- Until the browser meets the clicked element.
+- When an event occurs, browser wants to find event handlers to call.
+- Order in which this search occurs is divided into three phases.
+  - **Capture phase &rarr; Target phase &rarr; Bubble phase**.
+  - Usually Capture phase is ignored.
+- But, in this case we have to deal with **Capture phase**.
 
-2. Target phase
-- Go to the clicked element, check to see if it has event handler
+### Capture phase
 
-3. Bubble phase
-- Go to **parent** of clicked element, see it has handler. Then go to **parent's parent**... etc
+- Go to *most parent* of clicked element, see if it has handler.
+- Go to *second most parent*...
+  - Until the browser meets the clicked element.
 
-```js
-// Sets up event handler for the bubbling phase
-document.addEventListener("click", handleClick);
+### Target phase
 
-// Sets up event handler for the bubbling phase
-document.addEventListener("click", handleClick, false);
+- Go to the clicked element, check to see if it has event handler.
 
-// Sets up event handler for the capture phase
-document.addEventListener("click", handleClick, true);
-```
+### Bubble phase
 
-- Third argument controls bubble vs capture
-- False by default
-- 99% of the time we want false
+- Go to *parent* of clicked element, see it has handler.
+- Then go to *parent's parent*... etc
+  - Until the browser meets the most parent of the clicked element.
 
-# Putting it All Together
+## Implementation of Event Capturing
 
-```js
-const dropdown = document.querySelector(".w-48");
+`document.addEventListener` receives three arguments.
+- Third argument controls Bubble vs Capture
+  - It is `false` by default.
+  - Most of the time we only need `false` on the third argument.
+- ```js
+  // Sets up event handler for the bubbling phase
+  document.addEventListener("click", handleClick);
 
-const handleClick = (event) => {
-  if (dropdown.contains(event.target)) {
-    console.log("Inside dropdown");
-  } else {
-    console.log("OUTSIDE dropdown");
-  }
-}
+  // Sets up event handler for the bubbling phase
+  document.addEventListener("click", handleClick, false);
 
-document.addEventListener("click", handleClick, true);
-```
+  // Sets up event handler for the capture phase
+  document.addEventListener("click", handleClick, true);
+  ```
 
-- Get reference to dropdown element
+Putting it all together.
+- Get reference to dropdown element.
 - Check to see if clicked element is inside dropdown
+- ```js
+  const dropdown = document.querySelector(".w-48");
 
-why capture phase?
+  const handleClick = (event) => {
+    if (dropdown.contains(event.target)) {
+      console.log("Inside dropdown");
+    } else {
+      console.log("OUTSIDE dropdown");
+    }
+  }
 
-# Why a Capture Phase Handler?
+  document.addEventListener("click", handleClick, true);
+  ```
 
-Set third argument of `document.addEventListener("click", handleClick, false)` as `false`.
+## Why a Capture Phase Handler?
 
-![Expect inside dropdown](https://imgur.com/MYm7DPc.png)
-![We get OUTSIDE dropdown](https://imgur.com/F2M6S4g.png)
+<!-- ![Expect inside dropdown](https://imgur.com/MYm7DPc.png) -->
+<!-- ![We get OUTSIDE dropdown](https://imgur.com/F2M6S4g.png) -->
 
 ![Event handler running](https://i.imgur.com/vJj0NJa.png)
 
-Expectation when `capture === false`
-1. User clicks on an option
-2. No capture phase handlers, so browser starts Target then Bubble phase
-3. Sees click event handler on the `option` div. This is the one in our component
-4. React calls the event handler in our component
+What we expect from `document.addEventListener("click", handleClick, false)`.
+1. User clicks on an option.
+2. No capture phase handlers, so browser starts Target then Bubble phase.
+3. Sees click event handler on the `option` div. This is the one in our component.
+4. React calls the event handler in our component.
 5. We update state to close dropdown, but React doesn't rerender yet...
-6. Click event handler we manually added to document called
-7. We check to see if click was inside of the dropdown
-8. ...React finally rerenders component
+6. Click event handler we manually added to document called.
+7. We check to see if click was inside of the dropdown.
+8. ...React finally rerenders component.
 
-Reality when `capture === false`
-1. User clicks on an option
-2. Browser starts looking for event handler
-3. Sees click event handler on the `option` div, placed by React
-4. React calls the event handler in our component
+What really happens in `document.addEventListener("click", handleClick, false)`.
+1. User clicks on an option.
+2. Browser starts Target then Bubble phase, looking for event handler.
+3. Sees click event handler on the `option` div, placed by React.
+4. React calls the event handler in our component.
 5. We update state to close dropdown, but React doesn't rerender yet...
-6. React finally rerenders component
-7. Click event handler we manually added to document called
-8. We check to see if click was inside of the dropdown
+6. *...React finally rerenders component*.
+7. Click event handler we manually added to document called.
+8. We check to see if click was inside of the dropdown.
 
-
-How to debug this?
-- Use `performance.now()`
-
-```jsx
-// "./components/Dropdown.js"
-const Dropdown = ({ options, value, onChange }) => {
-  // ...
-  window.timeTwo = performance.now(); // When the component rerenders
-  const handleOptionClick = (option) => {
-    window.timeOne = performance.now();
-    setIsOpen(false);
-    onChange(option);
-  }
-  // ...
-}
-
-const handleClick = (event) {
-  window.timeThree = performance.now();
-  if (dropdown.contains(event.target)) {
-      console.log("Inside dropdown");
-  } else {
-      console.log("OUTSIDE dropdown");
-  }
-}
-```
-
-# Reminder on the useEffect Function
-
-```jsx
-// "./components/Dropdown.js"
-import { useState, useEffect } from "react";
-import { FiChevronDown } from "react-icons/fi";
-import Panel from "./Panel";
-
-const Dropdown = ({ options, value, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    const handler = (event) => {
-      console.log(event.target);
-    };
-
-    document.addEventListener("click", handler, true);
-  }, [])
-
-  const handleClick = () => {
-    setIsOpen(currentIsOpen => !currentIsOpen);
-    // setIsOpen(!isOpen);
+How do we debug this?
+- Use `performance.now()`.
+- ```jsx
+  // "./components/Dropdown.js"
+  const Dropdown = ({ options, value, onChange }) => {
+    // ...
+    window.timeTwo = performance.now(); // When the component rerenders
+    const handleOptionClick = (option) => {
+      window.timeOne = performance.now();
+      setIsOpen(false);
+      onChange(option);
+    }
+    // ...
   }
 
-  const handleOptionClick = (option) => {
-    setIsOpen(false);
-    onChange(option);
+  const handleClick = (event) {
+    window.timeThree = performance.now();
+    if (dropdown.contains(event.target)) {
+        console.log("Inside dropdown");
+    } else {
+        console.log("OUTSIDE dropdown");
+    }
   }
+  ```
 
-  const renderedOptions = options.map(option => {
-    return (
-      <div
-        className="hover:bg-sky-100 rounded cursor-pointer p-1"
-        onClick={() => handleOptionClick(option)}
-        key={option.value}
-      >
-        {option.label}
-      </div>
-    );
-  })
+# Update Event Listener Through `useEffect` Function
 
-  return (
-    <div className="w-48 relative">
-      <Panel
-        className="flex justify-between items-center cursor-pointer" 
-        onClick={handleClick}
-      >
-        {value?.label || "Select..."}
-        <FiChevronDown className="text-lg"/>
-      </Panel>
-      {isOpen && <Panel className="absolute top-full">{renderedOptions}</Panel>}
-    </div>
-  )
-};
+Need to call `document.addEventListener("click", handleClick, true)` *once* when dropdown is rendered.
+- This is what happens when second argument of `useEffect` is an *empty array*.
+  - It is possible to use when the second argument is not an empty array.
+  - But the task flow gets very complicated.
+- ```jsx
+  // "./components/Dropdown.js"
+  import { useState, useEffect } from "react";
+  import { FiChevronDown } from "react-icons/fi";
+  import Panel from "./Panel";
 
-export default Dropdown;
-```
+  const Dropdown = ({ options, value, onChange }) => {
+    const [isOpen, setIsOpen] = useState(false);
 
-# Reminder on useEffect Cleanup
+    useEffect(() => {
+      const handler = (event) => {
+        console.log(event.target);
+      };
+
+      document.addEventListener("click", handler, true);
+    }, [])
+    //...
+  };
+
+  export default Dropdown;
+  ```
+
+## Reminder on `useEffect` Cleanup
 
 ![Fix useEffect](https://i.imgur.com/jjQkY8p.png)
-
-- When our component is about to removed from the screen, we tell our listener to stop watching for clicks.
-
 ![Cleaup function](https://i.imgur.com/nn4qhIw.png)
 
-- This is what happens when second argument of `useEffect` is an **empty array**.
-  - possible to use when the second argument is not an empty array
-  - But the task flow gets very complicated
+When our component is about to removed from the screen, we tell our listener to stop watching for clicks.
+- *Return a clean-up function* in `useEffect` function.
+- ```jsx
+  // "./components/Dropdown.js"
+  import { useState, useEffect } from "react";
+  import { FiChevronDown } from "react-icons/fi";
+  import Panel from "./Panel";
 
-```jsx
-// "./components/Dropdown.js"
-import { useState, useEffect } from "react";
-import { FiChevronDown } from "react-icons/fi";
-import Panel from "./Panel";
+  const Dropdown = ({ options, value, onChange }) => {
+    const [isOpen, setIsOpen] = useState(false);
 
-const Dropdown = ({ options, value, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
+    useEffect(() => {
+      //...
+      return () => {
+        document.removeEventListener("click", handler);
+      };
+    }, []);
+    //...
+  };
 
-  useEffect(() => {
-    const handler = (event) => {
-      console.log(event.target);
-    };
+  export default Dropdown;
+  ```
 
-    document.addEventListener("click", handler, true);
+# Referencing Element with `useRef` Hook
 
-    return () => {
-      document.removeEventListener("click", handler);
-    };
-  }, []);
+Assumes the first element with className `w-48` is the dropdown.
+- ```js
+  const dropdown = document.querySelector(".w-48");
+  ```
+- However, this is not always the case.
+- ![Issues when multiple dropdowns](https://i.imgur.com/RKSlsvm.png)
 
-  const handleClick = () => {
-    setIsOpen(currentIsOpen => !currentIsOpen);
-    // setIsOpen(!isOpen);
-  }
+## `useRef` in Action
 
-  const handleOptionClick = (option) => {
-    setIsOpen(false);
-    onChange(option);
-  }
+`useRef` hook.
+- Allows a component to get a *reference* to a DOM element that it creates.
+- 95% of the time used with DOM elements, but can hold a reference to any value.
 
-  const renderedOptions = options.map(option => {
-    return (
-      <div
-        className="hover:bg-sky-100 rounded cursor-pointer p-1"
-        onClick={() => handleOptionClick(option)}
-        key={option.value}
-      >
-        {option.label}
-      </div>
-    );
-  })
-
-  return (
-    <div className="w-48 relative">
-      <Panel
-        className="flex justify-between items-center cursor-pointer" 
-        onClick={handleClick}
-      >
-        {value?.label || "Select..."}
-        <FiChevronDown className="text-lg"/>
-      </Panel>
-      {isOpen && <Panel className="absolute top-full">{renderedOptions}</Panel>}
-    </div>
-  )
-};
-
-export default Dropdown;
-```
-
-# Issues with Element References
-
-```js
-const dropdown = document.querySelector(".w-48");
-// ...
-```
-
-- Assumes the first element with className "w-48" is the dropdown
-  - This is not going to work for our component
-
-![Issues when multiple dropdowns](https://i.imgur.com/RKSlsvm.png)
-
-# useRef in Action
-
-useRef
-- Allows a component to get a *reference* to a DOM element that it creates
-- 95% of the time used with DOM elements, but can hold a reference to any value
-
-useRef Implementation
+`useRef` implementation.
 1. Create a ref at the top of your component by calling `useRef`.
 2. Assign the ref to a JSX element as a prop called `ref`.
 3. Access that DOM element with `ref.current`.
 
-```jsx
-// "./components/Dropdown.js"
-import { useState, useEffect, useRef } from "react";
-import { FiChevronDown } from "react-icons/fi";
-import Panel from "./Panel";
+## Checking Click Location
 
-const Dropdown = ({ options, value, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const divEl = useRef();
+- `divEl` can be `null`.
+  - So we have to check whether it is `null` or not.
+  - Add `if (!divEl.current) { return; }`.
+- ```jsx
+  // "./components/Dropdown.js"
+  import { useState, useEffect, useRef } from "react";
+  import { FiChevronDown } from "react-icons/fi";
+  import Panel from "./Panel";
 
-  useEffect(() => {
-    const handler = (event) => {
-      console.log(divEl.current);
-    };
+  const Dropdown = ({ options, value, onChange }) => {
+    //...
+    const divEl = useRef();
 
-    document.addEventListener("click", handler, true);
+    useEffect(() => {
+      const handler = (event) => {
+        if (!divEl.current) { // handles when divEl is null
+          return;
+        }
 
-    return () => {
-      document.removeEventListener("click", handler);
-    };
-  }, []);
-
-  const handleClick = () => {
-    setIsOpen(currentIsOpen => !currentIsOpen);
-    // setIsOpen(!isOpen);
-  }
-
-  const handleOptionClick = (option) => {
-    setIsOpen(false);
-    onChange(option);
-  }
-
-  const renderedOptions = options.map(option => {
+        if (!divEl.current.contains(event.target)) {
+          setIsOpen(false);
+        }
+      };
+      //...
+    }, []);
+    //...
     return (
-      <div
-        className="hover:bg-sky-100 rounded cursor-pointer p-1"
-        onClick={() => handleOptionClick(option)}
-        key={option.value}
-      >
-        {option.label}
+      <div ref={divEl} className="w-48 relative">
+        //...
       </div>
-    );
-  })
+    )
+  };
 
-  return (
-    <div ref={divEl} className="w-48 relative">
-      <Panel
-        className="flex justify-between items-center cursor-pointer" 
-        onClick={handleClick}
-      >
-        {value?.label || "Select..."}
-        <FiChevronDown className="text-lg"/>
-      </Panel>
-      {isOpen && <Panel className="absolute top-full">{renderedOptions}</Panel>}
-    </div>
-  )
-};
-
-export default Dropdown;
-```
-
-# Checking Click Location
-
-```jsx
-// "./components/Dropdown.js"
-import { useState, useEffect, useRef } from "react";
-import { FiChevronDown } from "react-icons/fi";
-import Panel from "./Panel";
-
-const Dropdown = ({ options, value, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const divEl = useRef();
-
-  useEffect(() => {
-    const handler = (event) => {
-      if (!divEl.current) {
-        return;
-      }
-
-      if (!divEl.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("click", handler, true);
-
-    return () => {
-      document.removeEventListener("click", handler);
-    };
-  }, []);
-
-  const handleClick = () => {
-    setIsOpen(currentIsOpen => !currentIsOpen);
-    // setIsOpen(!isOpen);
-  }
-
-  const handleOptionClick = (option) => {
-    setIsOpen(false);
-    onChange(option);
-  }
-
-  const renderedOptions = options.map(option => {
-    return (
-      <div
-        className="hover:bg-sky-100 rounded cursor-pointer p-1"
-        onClick={() => handleOptionClick(option)}
-        key={option.value}
-      >
-        {option.label}
-      </div>
-    );
-  })
-
-  return (
-    <div ref={divEl} className="w-48 relative">
-      <Panel
-        className="flex justify-between items-center cursor-pointer" 
-        onClick={handleClick}
-      >
-        {value?.label || "Select..."}
-        <FiChevronDown className="text-lg"/>
-      </Panel>
-      {isOpen && <Panel className="absolute top-full">{renderedOptions}</Panel>}
-    </div>
-  )
-};
-
-export default Dropdown;
-```
-
-- `divEl` can be `null`
-  - So we have to check whether it is null or not
-- Add `if (!divEl.current) { return; }`
+  export default Dropdown;
+  ```
