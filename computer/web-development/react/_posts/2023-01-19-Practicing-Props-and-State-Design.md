@@ -15,46 +15,43 @@ title: "[React] Practicing Props and State Design"
 # Designing the Props
 
 ![Dropdown Design](https://i.imgur.com/3xEEDWw.png)
+- Parent component passes down some options to Dropdown component.
+- Dropdown then renders the options.
+- Parent component may want to know which option is selected.
 
-Bad Idea
+## Passing Down Both Labels and Values
 
 ![Bad Dropdown Design](https://i.imgur.com/xuCMm3K.png)
 
-- Eventually, developer wants to take a look at what option user has selected
+Passing labels down only is not a good idea.
+- Developer wants to take a look at what option user has selected.
+- User may have selected `mild` flavor, rather than `"I want mild"`.
 
-```js
-[
-  { label: "I want mild", value: "mild" },
-  { label: "I'd like spicy", value: "spicy" },
-  { label: "Give me extra spicy!", value: "extra_spicy" },
-];
-
-if (selected.value === "spicy") {
-  makeFoodSpicy();
-}
-```
 
 ![Possibe Design](https://i.imgur.com/Kiop0UF.png)
 
-A list of object with information would be a possible design.
+A list of object with information would be a possible design for the option props.
+- Developers can say that user has selected `mild` flavor instead of `"I want mild"`.
+- Much easier when handling user-selected option.
 
 # Component Creation
 
-- We need to first figure out how we are going to make the list appear and disappear over time when user clicked the dropdown
-- Content changing on the screen, we need to think about state
+How to make the list appear and disappear over time when user clicked the dropdown?
+- Content changes on the screen.
+- We need to think about **state** and its design.
 
-# More State Design
+## More State Design
 
 State Design Process
 
 **Step 1**
 
 How would a user describe this app step by step?
-- Clicking the dropdown
-- List of options appears
-- Clicks an option
-- List of options disappears
-- Item clicked appears in the box
+- Clicking the dropdown.
+- List of options appears.
+- Clicks an option.
+- List of options disappears.
+- Item clicked appears in the box.
 
 **Step 2**
 
@@ -68,16 +65,10 @@ Categorize each step as state or event handler.
 **Step 3**
 
 Group common steps. Remove duplicates. Rewrite descriptions.
-- Clicking the dropdown &rarr; **Event handler**
+- An item can be selected &rarr; **State**
+- Menu opens and closes &rarr; **State**
 - Clicks an option &rarr; **Event handler**
-- Menu opens and closes &rarr; **State**
-- An item can be selected &rarr; **State**
-
-**Initial Design**
-- An item can be selected &rarr; **State**
-- Menu opens and closes &rarr; **State**
-- Click an option &rarr; **Event Handler**
-- Click the dropdown &rarr; **Event Handler**
+- Clicking the dropdown &rarr; **Event handler**
 
 **Step 4**
 
@@ -87,10 +78,10 @@ Look at mockup. Remove or simplify parts that aren't changing.
 
 **Step 5**
 
-Replace remaining elements with text descriptions
-- Menu closed, no option selected
-- Menu open, no option selected
-- Menu closed, an option selected
+Replace remaining elements with text descriptions.
+- Menu closed, no option selected.
+- Menu open, no option selected.
+- Menu closed, an option selected.
 
 **Step 6**
 
@@ -100,30 +91,29 @@ Repeat step 4 and step 5 with a different variation.
 
 Imagine you have to write a function that returns the text of steps 5 and 6. In addition to your component props, *what other arguments would you need?*
 
-```js
-const ops = [
-  { label: "I want mild", value: "mild" },
-  { label: "I'd like spicy", value: "spicy" },
-  { label: "Give me extra spicy!", value: "extra_spicy" },
-];
+- ```js
+  const ops = [
+    { label: "I want mild", value: "mild" },
+    { label: "I'd like spicy", value: "spicy" },
+    { label: "Give me extra spicy!", value: "extra_spicy" },
+  ];
 
-const myFunction = (options, /* ??? */) => {
-  
-};
+  const myFunction = (options, /* ??? */) => {
+    
+  };
 
-myFunction(opts, /* ??? */);
-```
-
+  myFunction(opts, /* ??? */);
+  ```
 - Whether the menu is opened or closed.
   - `isOpen` with boolean type.
 - Which item is selected?
-  - `selected` with Option or null type
+  - `selected` with Option or null type.
 
 **Step 8**
 
 Decide where each event handler + state will be defined.
 - ![State location](https://i.imgur.com/c5GLHIf.png)
-- The parent of the dropdown possibly want to know which item is selected.
+- The parent of the dropdown possibly wants to know which item is selected.
   - `selected` belongs to parent component.
 - Few components care about whether the dropdown is opened or not.
   - `isOpen` belongs to dropdown component.
@@ -209,13 +199,7 @@ Decide where each event handler + state will be defined.
     const handleSelect = (option) => {
       setSelection(option.label);
     }
-
-    const options = [
-      { label: "Red", value: "red" },
-      { label: "Green", value: "green" },
-      { label: "Blue", value: "blue" },
-    ]
-
+    //...
     return <Dropdown options={options} selection={selection} onSelect={handleSelect} />;
   }
 
@@ -229,26 +213,12 @@ Decide where each event handler + state will be defined.
   import { useState } from "react";
 
   const Dropdown = ({ options, selection, onSelect }) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const handleClick = () => {
-      setIsOpen(currentIsOpen => !currentIsOpen);
-      // setIsOpen(!isOpen);
-    }
-
+    //...
     const handleOptionClick = (option) => {
       setIsOpen(false);
       onSelect(option);
     }
-
-    const renderedOptions = options.map(option => {
-      return (
-        <div onClick={() => handleOptionClick(option)} key={option.value} >
-          {option.label}
-        </div>
-      );
-    })
-
+    //...
     return (
       <div>
         <div onClick={handleClick}>{selection || "Select..."}</div>
@@ -261,68 +231,57 @@ Decide where each event handler + state will be defined.
   ```
 - `<Dropdown />` gets information about which item is selected from its parent component.
 
-# Existence Check Helper
+## Optional Chaining (`?.`)
 
-```js
-let color = null;
-console.log(color.length); // error
-console.log(color?.length); // undefined
-```
+If the object is `undefined` or `null`, it returns `undefined` instead of throwing an error.
+- Don't have to concern about illegal memory access.
+- ```js
+  let color = null;
+  // console.log(color.length); // error
+  console.log(color?.length); // undefined
+  ```
 
-```js
-// "./components/Dropdown.js"
-import { useState } from "react";
+We can edit our `Dropdown.js` code as below.
+- ```js
+  // "./components/Dropdown.js"
+  import { useState } from "react";
 
-const Dropdown = ({ options, selection, onSelect }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsOpen(currentIsOpen => !currentIsOpen);
-    // setIsOpen(!isOpen);
-  }
-
-  const handleOptionClick = (option) => {
-    setIsOpen(false);
-    onSelect(option);
-  }
-
-  const renderedOptions = options.map(option => {
+  const Dropdown = ({ options, selection, onSelect }) => {
+    //...
     return (
-      <div onClick={() => handleOptionClick(option)} key={option.value} >
-        {option.label}
+      <div>
+        // Optional chaining is used
+        <div onClick={handleClick}>{selection?.label || "Select..."}</div>
+        {isOpen && <div>{renderedOptions}</div>}
       </div>
-    );
-  })
+    )
+  };
 
-  return (
-    <div>
-      <div onClick={handleClick}>{selection?.label || "Select..."}</div>
-      {isOpen && <div>{renderedOptions}</div>}
-    </div>
-  )
-};
-
-export default Dropdown;
-```
+  export default Dropdown;
+  ```
 
 # Community Convention with Props Names
 
-Every component we make that shows a "form control" will follow this pattern
+Every component we make that shows a "form control" will follow this pattern.
 - Extremely common patterns:
-- Call the "current value" prop "value"
-- Call the "value changed" prop "onChange"
+- Call the "current value" prop `value`.
+- Call the "value changed" prop `onChange`.
 
 ![Bad convention with props name](https://i.imgur.com/yKCuj40.png)
 
-- "Form control" components, but prop names are different
-- Hard to remember...
+Bad event handler naming convention.
+- `onSelect`, `onChange`, `onCheck`, ...
+- "Form control" components, but prop names are different.
+- Prop names are hard to remember.
 
 ![Good convention with props name](https://i.imgur.com/RSlRCXO.png)
 
-- Same prop names for all form control components
-- Easy to remember
+Preferred naming convention.
+- Although each events are different, call all the event handlers `onChange`.
+- Same prop names for all form control components.
+- The prop name is easy to remember.
 
-# Adding Styling
+# Panel Component
 
 ```jsx
 // "./components/Dropdown.js"
@@ -375,7 +334,7 @@ export default Dropdown;
 - some of the class names are duplicated
   - `border rounded p-3 shadow bg-white w-full`
 
-# Panel Component
+## Panel Component
 
 ![Panel componnet with tailwind](https://i.imgur.com/9jhCkGp.png)
 
@@ -383,7 +342,7 @@ Issues
 - pass down classname
 - pass down all the rest event handlers
 
-# Creating The Reusable Panel
+## Creating The Reusable Panel
 
 ```jsx
 // "./components/Panel.js"
