@@ -1,5 +1,5 @@
 ---
-title: "[React] Creating Button Component"
+title: "[React] Creating Custom Button Component"
 ---
 
 # Overview

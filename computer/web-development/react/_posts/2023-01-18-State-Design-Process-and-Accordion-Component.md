@@ -1,5 +1,5 @@
 ---
-title: "[React] Mastering the State Design Process"
+title: "[React] State Design Process and Accordion Component"
 ---
 
 # App Overview
