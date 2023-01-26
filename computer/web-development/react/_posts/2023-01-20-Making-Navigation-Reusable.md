@@ -45,230 +45,188 @@ How navigation should work with React.
 
 # Navigation in React
 
-## Get Current Path
-
-How do we look at the address bar? What part of it do we care about?
-- `window.location` object gives the information.
-- `window.location.pathname` matters.
-
-## The `pushState` Function
-
-How do we update the address bar?
-- `window.location = "http://localhost:3000/dropdown"`. 
-  - However it causes a full page refresh.
-- `window.history.pushState({}, "", "/dropdown")`.
-  - It updates the address bar without causing a refresh.
-  - Suitable for a React app.
-
-## Back, Forward Buttons
-
 ![Window history stack](https://i.imgur.com/Jx2VVZ8.png)
-- When user clicks forward or back, window emits a `popstate` event if the user's current url was added by `pushState`.
 
-# Navigation Context
 
-Create a navigation context of following design.
-- ![NavigationContext](https://i.imgur.com/qF0eo4f.png)
+How should we update the address bar in a React app?
+- Get the information of current path.
+  - `window.location` object gives the information.
+  - `window.location.pathname` matters.
+- We can try `window.location = "http://localhost:3000/dropdown";`. 
+  - It causes a full page refresh.
+- Or, we can try `window.history.pushState({}, "", "/dropdown");`.
+  - It updates the address bar without causing a refresh, hence it is useful for a React app.
+  - When user clicks forward or back, window emits a `popstate` event ***if the user's current url was added by `window.history.pushState()`***.
 
-```jsx
-// "./context/navigation.js"
-import { createContext } from "react";
+## Navigation Context
 
-const NavigationContext = createContext();
+![NavigationContext](https://i.imgur.com/qF0eo4f.png)
 
-const NavigationProvider = ({ children }) => {
-  return (
-    {% raw %}<NavigationContext.Provider value={{}} >{% endraw %}
-      {children}
-    </NavigationContext.Provider>
-  )
-};
+Create a navigation context.
+- `currentPath` gives the current url.
+- `navigate` updates current url and navigate to the page.
+- Set `currentPath` and `navigate` globally, so that each pages can access them.
+- ```jsx
+  // "./context/navigation.js"
+  import { createContext } from "react";
 
-export { NavigationProvider };
-export default NavigationContext;
+  const NavigationContext = createContext();
+
+  const NavigationProvider = ({ children }) => {
+    return (
+      {% raw %}<NavigationContext.Provider value={{}} >{% endraw %}
+        {children}
+      </NavigationContext.Provider>
+    )
+  };
+
+  export { NavigationProvider };
+  export default NavigationContext;
+  ```
+- ```jsx
+  // "./index.js"
+  import "./index.css";
+  import React from "react";
+  import ReactDOM from "react-dom/client";
+  import App from "./App";
+  import { NavigationProvider } from "./context/navigation"
+
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(
+    <NavigationProvider>
+      <App />
+    </NavigationProvider>
+  );
+  ```
+
+## Implementing Navigation
+
+`navigate` only updates address bar.
+- Call `pushState` method to update.
+  - No page refresh when user clicks back.
+  - Automatically updates url in the address bar.
+- Call `setCurrentPath` hook to update `currentPath` variable.
+
+Listening to forward and back clicks.
+- `popstate` event occurs when user clicks forward or back button.
+  - Current page must be navigated by `pushState` method.
+  - Page does not refresh, and url in the address bar updates.
+- Set event handler to the `window` object.
+- ```jsx
+  // "./context/navigation.js"
+  import { createContext, useState, useEffect } from "react";
+
+  const NavigationContext = createContext();
+
+  const NavigationProvider = ({ children }) => {
+    const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+    useEffect(() => {
+      const handler = () => {
+        setCurrentPath(window.location.pathname);
+      };
+      window.addEventListener("popstate", handler);
+
+      return () => {
+        window.removeEventListener("popstate", handler);
+      }
+    }, []);
+
+    const navigate = (to) => {
+      window.history.pushState({}, "", to);
+      setCurrentPath(to);
+    }
+
+    return (
+      {% raw %}<NavigationContext.Provider value={{ currentPath, navigate }} >{% endraw %}
+        {children}
+      </NavigationContext.Provider>
+    )
+  };
+
+  export { NavigationProvider };
+  export default NavigationContext;
 ```
 
-```jsx
-// "./index.js"
-import "./index.css";
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import { NavigationProvider } from "./context/navigation"
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <NavigationProvider>
-    <App />
-  </NavigationProvider>
-);
-```
 ## Link Component Design
 
-```jsx
-const Link = ({ to }) => {
-  const handleClick = (event) => {
-    event.preventDefault(); // stops the standard navigation
-    // ...
-  }
-  return <a onClick={handleClick} href={to}>Click</a>
-}
-```
-- Prop `to` describes the path that user will go to if they click this.
+`<Link />` component will do what `<a />` tag does.
+- Prop `to` describes the path that user wants to go.
+- Need `<a />` element that goes to a path **in our app**?
+  - Use this `<Link />` component.
+- Need `<a />` element that goes to **another domain**?
+  - Use a normal `<a />` element.
+- ```jsx
+  // "./components/Link.js"
+  import { useContext } from "react";
+  import NavigationContext from "../context/navigation";
 
+  const Link = ({ to, children }) => {
+    const { navigate } = useContext(NavigationContext);
 
-# Listening to Forward and Back Clicks
-
-```jsx
-// "./context/navigation.js"
-import { createContext, useState, useEffect } from "react";
-
-const NavigationContext = createContext();
-
-const NavigationProvider = ({ children }) => {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
-
-  useEffect(() => {
-    const handler = () => {
-      setCurrentPath(window.location.pathname);
-    };
-    window.addEventListener("popstate", handler);
-
-    return () => {
-      window.removeEventListener("popstate", handler);
+    const handleClick = (event) => {
+      event.preventDefault();
+      navigate(to);
     }
-  }, []);
 
-  return (
-    <NavigationContext.Provider value={{}} >
-      {children}
-    </NavigationContext.Provider>
-  )
-};
+    return (
+      <a onClick={handleClick}>{children}</a>
+    );
+  };
 
-export { NavigationProvider };
-export default NavigationContext;
-```
+  export default Link;
+  ```
 
-# Programmatic Navigation
-
-navigate
-- Call `pushState` to update address bar
-- Update `currentPath`
-  - Since `pushState` does not trigger a `popstate` event
-
-```jsx
-// "./context/navigation.js"
-import { createContext, useState, useEffect } from "react";
-
-const NavigationContext = createContext();
-
-const NavigationProvider = ({ children }) => {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
-
-  useEffect(() => {
-    const handler = () => {
-      setCurrentPath(window.location.pathname);
-    };
-    window.addEventListener("popstate", handler);
-
-    return () => {
-      window.removeEventListener("popstate", handler);
-    }
-  }, []);
-
-  const navigate = (to) => {
-    window.history.pushState({}, "", to);
-    setCurrentPath(to);
-  }
-
-  return (
-    <NavigationContext.Provider value={{ currentPath, navigate }} >
-      {children}
-    </NavigationContext.Provider>
-  )
-};
-
-export { NavigationProvider };
-export default NavigationContext;
-```
-- No refresh when click back
-
-# A Link Component
-
-- Need `<a />` element that goes to a path in our app? **Use this component**
-- Need `<a />` element that goes to another domain? **Use a normal `<a />` element**
-
-```jsx
-// "./components/Link.js"
-import { useContext } from "react";
-import NavigationContext from "../context/navigation";
-
-const Link = ({ to, children }) => {
-  const { navigate } = useContext(NavigationContext);
-
-  const handleClick = (event) => {
-    event.preventDefault();
-
-    navigate(to);
-  }
-
-  return (
-    <a onClick={handleClick}>{children}</a>
-  );
-};
-
-export default Link;
-```
-
-# A Route Component
+## A Route Component
 
 ![Route component](https://i.imgur.com/QSg3X2D.png)
 
-```jsx
-// "./components/Route.js"
-import { useContext } from "react";
-import NavigationContext from "../context/navigation";
+`<Route />` component sees `currentPath` and decides whether to render its children or not.
+- If passed down path matches `currentPath`, render the children.
+- ```jsx
+  // "./components/Route.js"
+  import { useContext } from "react";
+  import NavigationContext from "../context/navigation";
 
-const Route = ({ path, children }) => {
-  const { currentPath } = useContext(NavigationContext);
+  const Route = ({ path, children }) => {
+    const { currentPath } = useContext(NavigationContext);
 
-  if (path === currentPath) {
-    return children;
+    if (path === currentPath) {
+      return children;
+    }
+
+    return null;
+  };
+
+  export default Route;
+  ```
+- ```jsx
+  // "./App.js"
+  import Link from "./components/Link";
+  import Route from "./components/Route";
+  import AccordionPage from "./pages/AccordionPage";
+  import DropdownPage from "./pages/DropdownPage";
+
+  const App = () => {
+    return (
+      <div>
+        <Link to="/accordion">Go to accordion</Link>
+        <Link to="/dropdown">Go to dropdown</Link>
+        <div>
+          <Route path="/accordion">
+            <AccordionPage />
+          </Route>
+          <Route path="/dropdown">
+            <DropdownPage />
+          </Route>
+        </div>
+      </div>
+    );
   }
 
-  return null;
-};
-
-export default Route;
-```
-
-```jsx
-// "./App.js"
-import Link from "./components/Link";
-import Route from "./components/Route";
-import AccordionPage from "./pages/AccordionPage";
-import DropdownPage from "./pages/DropdownPage";
-
-const App = () => {
-  return (
-    <div>
-      <Link to="/accordion">Go to accordion</Link>
-      <Link to="/dropdown">Go to dropdown</Link>
-      <div>
-        <Route path="/accordion">
-          <AccordionPage />
-        </Route>
-        <Route path="/dropdown">
-          <DropdownPage />
-        </Route>
-      </div>
-    </div>
-  );
-}
-
-export default App;
-```
+  export default App;
+  ```
 
 # Handling Control and Command Keys
 
