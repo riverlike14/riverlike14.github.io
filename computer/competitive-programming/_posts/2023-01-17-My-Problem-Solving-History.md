@@ -16,8 +16,8 @@ Last Updated: 2023년 1월 25일.
 |:-|-:|-:|:-|:-:|:-|
 |Codeforces|536|108798|Newbie||Jan/10/2023|
 |AtCoder|1154|8984|5 Kyu||Jan/21/2023|
-|solved.ac|2239|667|Diamond V|Class 6|Jan/25/2023|
-|Backjoon||||solved 1254|Jan/25/2023|
+|solved.ac|2255|625|Diamond V|Class 7|Jan/27/2023|
+|Backjoon||||solved 1259|Jan/27/2023|
 
 ## 초기 정보
 
@@ -35,6 +35,30 @@ Last Updated: 2023년 1월 25일.
 ## 2023년 1월
 
 ### 넷째 주
+
+1월 27일.
+- [Convex Hull](https://www.acmicpc.net/problem/4181)
+  - 난이도: Platinum 5
+  - 결과: 30min, 성공
+  - 시도: 3
+  - [단순 다각형](https://www.acmicpc.net/problem/3679)랑 똑같은 아이디어. 정렬할 때 점들이 직선위에 있는 경우, 정렬한 뒤 맨 마지막 점들이 한 직선 위에 있는 경우만 해결하면 충분.
+- [수열과 쿼리 22](https://www.acmicpc.net/submit/16978)
+  - 난이도: Platinum 4
+  - 결과: 20min, 성공
+  - 시도: 1
+  - 평범한 오프라인 쿼리. 구현만 열심히 하면 됨.
+- [책 구매하기 3](https://www.acmicpc.net/problem/11407)
+  - 난이도: Platinum 3
+  - 결과: 20min, 성공
+  - 시도: 1
+  - 평범한 MCMF 문제.
+
+1월 26일.
+- [Parcel](https://www.acmicpc.net/problem/16287)
+  - 난이도: Platinum 5
+  - 결과: 1hr, 성공
+  - 시도: 5
+  - Meet in the middle로 통과. DP로 짜면 40배정도 빨라짐. Meet in the middle로 짰더니 0.01초 차이로 아슬아슬하게 통과. 계속 TLE떠서 코드를 계속 들여다보는데도 딱히 이상한 점이 없어서 짜증만 났던 문제.
 
 1월 25일.
 - [가장 긴 증가하는 부분 수열 6](https://www.acmicpc.net/problem/17411)
