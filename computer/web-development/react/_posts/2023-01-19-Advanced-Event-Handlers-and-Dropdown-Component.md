@@ -1,5 +1,5 @@
 ---
-title: "[React] Practicing Props and State Design"
+title: "[React] Advanced Event Handlers and Dropdown Component"
 ---
 
 # Component Overview

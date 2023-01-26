@@ -1,5 +1,5 @@
 ---
-title: "[React] Managing Multiple Slices with Redux Toolkit"
+title: "[React] Managing My Cars with Redux Toolkit"
 ---
 # App Overview
 
