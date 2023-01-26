@@ -1,5 +1,5 @@
 ---
-title: "[React] Making Navigation Reusable"
+title: "[React] Customized Navigation in Details"
 ---
 
 # App Overview
@@ -17,8 +17,14 @@ title: "[React] Making Navigation Reusable"
 
 ![Routing app design](https://i.imgur.com/RY4GHvW.png)
 
-We can navigate through pages.
+- `pushState` method and `popstate` event.
 - Create custom routing components.
+- Navigation context with custom navigation hook.
+
+## Library
+
+- `classnames`
+- `tailwindcss`
 
 # Web Browser Navigation
 
@@ -149,29 +155,36 @@ Listening to forward and back clicks.
 ```
 
 
-## Link Component Design
+## A Link Component
 
 `<Link />` component will do what `<a />` tag does.
+- `<Link />` vs `<a />`
+  - Need `<a />` element that goes to a path **in our app**? &rarr; Use this `<Link />` component.
+  - Need `<a />` element that goes to **another domain**? &rarr; Use a normal `<a />` element.
 - Prop `to` describes the path that user wants to go.
-- Need `<a />` element that goes to a path **in our app**?
-  - Use this `<Link />` component.
-- Need `<a />` element that goes to **another domain**?
-  - Use a normal `<a />` element.
+- Handles control(or command) key.
+  - If `Ctrl` is pressed, create a new tab and naviagate in there.
 - ```jsx
   // "./components/Link.js"
+  import classNames from "classnames";
   import { useContext } from "react";
   import NavigationContext from "../context/navigation";
 
   const Link = ({ to, children }) => {
     const { navigate } = useContext(NavigationContext);
 
+    const classes = classNames("text-blue-500"); // Some styles
+
     const handleClick = (event) => {
+      if (event.metaKey || event.ctrlKey) {
+        return;
+      }
       event.preventDefault();
       navigate(to);
     }
 
     return (
-      <a onClick={handleClick}>{children}</a>
+      <a className={classes} href={to} onClick={handleClick}>{children}</a>
     );
   };
 
@@ -228,275 +241,143 @@ Listening to forward and back clicks.
   export default App;
   ```
 
-# Handling Control and Command Keys
+## Custom Navigation Hook
 
-```jsx
-// "./components/Link.js"
-import { useContext } from "react";
-import NavigationContext from "../context/navigation";
+We can use a custom navigation hook.
+- `use-navigation.js`
+  - ```js
+    // "./hooks/use-navigation.js"
+    import { useContext } from "react";
+    import NavigationContext from "../context/navigation";
 
-const Link = ({ to, children }) => {
-  const { navigate } = useContext(NavigationContext);
-
-  const handleClick = (event) => {
-    if (event.metaKey || event.ctrlKey) {
-      return;
+    const useNavigation = () => {
+      return useContext(NavigationContext);
     }
-    event.preventDefault();
 
-    navigate(to);
-  }
+    export default useNavigation;
+    ```
+- `Link.js`
+  - ```jsx
+    // "./components/Link.js"
+    import classNames from "classnames";
+    import useNavigation from "../hooks/use-navigation";
 
-  return (
-    <a href={to} onClick={handleClick}>{children}</a>
-  );
-};
+    const Link = ({ to, children }) => {
+      const { navigate } = useNavigation();
+      //...
+    };
 
-export default Link;
-```
+    export default Link;
+    ```
+- `Route.js`
+  - ```jsx
+    // "./components/Route.js"
+    import useNavigation from "../hooks/use-navigation";
 
-# Link Styling
+    const Route = ({ path, children }) => {
+      const { currentPath } = useNavigation();
+      //...
+    };
 
-```jsx
-// "./components/Link.js"
-import classNames from "classnames";
-import { useContext } from "react";
-import NavigationContext from "../context/navigation";
-
-const Link = ({ to, children }) => {
-  const { navigate } = useContext(NavigationContext);
-
-  const classes = classNames("text-blue-500");
-
-  const handleClick = (event) => {
-    if (event.metaKey || event.ctrlKey) {
-      return;
-    }
-    event.preventDefault();
-
-    navigate(to);
-  }
-
-  return (
-    <a className={classes} href={to} onClick={handleClick}>{children}</a>
-  );
-};
-
-export default Link;
-```
-
-# Custom Navigation Hook
-
-```js
-// "./hooks/use-navigation.js"
-import { useContext } from "react";
-import NavigationContext from "../context/navigation";
-
-const useNavigation = () => {
-  return useContext(NavigationContext);
-}
-
-export default useNavigation;
-```
-
-```jsx
-// "./components/Link.js"
-import classNames from "classnames";
-import useNavigation from "../hooks/use-navigation";
-
-const Link = ({ to, children }) => {
-  const { navigate } = useNavigation();
-
-  const classes = classNames("text-blue-500");
-
-  const handleClick = (event) => {
-    if (event.metaKey || event.ctrlKey) {
-      return;
-    }
-    event.preventDefault();
-
-    navigate(to);
-  }
-
-  return (
-    <a className={classes} href={to} onClick={handleClick}>{children}</a>
-  );
-};
-
-export default Link;
-```
-
-```jsx
-// "./components/Route.js"
-import useNavigation from "../hooks/use-navigation";
-
-const Route = ({ path, children }) => {
-  const { currentPath } = useNavigation();
-
-  if (path === currentPath) {
-    return children;
-  }
-
-  return null;
-};
-
-export default Route;
-```
+    export default Route;
+    ```
 
 # Adding a Sidebar Component
 
-set default page as dropdown
+- Set a default page as dropdown.
+- ```jsx
+  // "./components/Sidebar.js"
+  import Link from "./Link";
 
-```jsx
-// "./App.js"
-import Link from "./components/Link";
-import Route from "./components/Route";
-import AccordionPage from "./pages/AccordionPage";
-import DropdownPage from "./pages/DropdownPage";
+  const Sidebar = () => {
+    const links = [
+      { label: "Dropdown", path: "/" },
+      { label: "Accordion", path: "/accordion" },
+      { label: "Buttons", path: "/buttons" },
+    ];
 
-const App = () => {
-  return (
-    <div>
-      <Link to="/accordion">Go to accordion</Link>
-      <Link to="/dropdown">Go to dropdown</Link>
-      <div>
-        <Route path="/accordion">
-          <AccordionPage />
-        </Route>
-        <Route path="/">
-          <DropdownPage />
-        </Route>
+    const renderedLinks = links.map(link => {
+      return <Link key={link.label} to={link.path} >{link.label}</Link>;
+    });
+
+    return (
+      <div className="sticky top-0 overflow-y-scroll flex flex-col" >
+        {renderedLinks}
       </div>
-    </div>
-  );
-}
+    )
+  };
 
-export default App;
-```
+  export default Sidebar;
+  ```
+- ```jsx
+  // "./App.js"
+  import Sidebar from "./components/Sidebar";
+  import Route from "./components/Route";
+  import AccordionPage from "./pages/AccordionPage";
+  import DropdownPage from "./pages/DropdownPage";
+  import ButtonPage from "./pages/ButtonPage";
 
-```jsx
-// "./components/Sidebar.js"
-import Link from "./Link";
-
-const Sidebar = () => {
-  const links = [
-    { label: "Dropdown", path: "/" },
-    { label: "Accordion", path: "/accordion" },
-    { label: "Buttons", path: "/buttons" },
-  ];
-
-  const renderedLinks = links.map(link => {
-    return <Link key={link.label} to={link.path} >{link.label}</Link>;
-  });
-
-  return (
-    <div className="sticky top-0 overflow-y-scroll flex flex-col" >
-      {renderedLinks}
-    </div>
-  )
-};
-
-export default Sidebar;
-```
-
-```jsx
-// "./App.js"
-import Sidebar from "./components/Sidebar";
-import Route from "./components/Route";
-import AccordionPage from "./pages/AccordionPage";
-import DropdownPage from "./pages/DropdownPage";
-import ButtonPage from "./pages/ButtonPage";
-
-const App = () => {
-  return (
-    <div className="container mx-auto grid grid-cols-6 gap-4 mt-4"> // Set sidebar on the left
-      <Sidebar />
-      <div className="col-span-5">
-        <Route path="/accordion">
-          <AccordionPage />
-        </Route>
-        <Route path="/">
-          <DropdownPage />
-        </Route>
-        <Route path="/">
-          <DropdownPage />
-        </Route>
-        <Route path="/buttons">
-          <ButtonPage />
-        </Route>
+  const App = () => {
+    return (
+      <div className="container mx-auto grid grid-cols-6 gap-4 mt-4"> // Set sidebar on the left
+        <Sidebar />
+        <div className="col-span-5">
+          <Route path="/"><DropdownPage /></Route>
+          <Route path="/accordion"><AccordionPage /></Route>
+          <Route path="/buttons"><ButtonPage /></Route>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-export default App;
-```
+  export default App;
+  ```
 
-# Highlighting the Active Link
+## Highlighting the Active Link
 
 ![Highlight the active link](https://i.imgur.com/5yrF0bb.png)
 
-```jsx
-// "./components/Sidebar.js"
-import Link from "./Link";
+- Pass down `activeClassName` props to `<Link />` component.
+- ```jsx
+  // "./components/Sidebar.js"
+  import Link from "./Link";
 
-const Sidebar = () => {
-  const links = [
-    { label: "Dropdown", path: "/" },
-    { label: "Accordion", path: "/accordion" },
-    { label: "Buttons", path: "/buttons" },
-  ];
+  const Sidebar = () => {
+    //...
+    const renderedLinks = links.map(link => {
+      return (
+        <Link
+          key={link.label} 
+          to={link.path} 
+          className="mb-3"
+          activeClassName="font-bold border-l-4 border-blue-500 pl-2"
+        >
+          {link.label}
+        </Link>
+      )
+    });
 
-  const renderedLinks = links.map(link => {
     return (
-      <Link
-        key={link.label} 
-        to={link.path} 
-        className="mb-3"
-        activeClassName="font-bold border-l-4 border-blue-500 pl-2"
-      >
-        {link.label}
-      </Link>
+      <div className="sticky top-0 overflow-y-scroll flex flex-col items-start">
+        {renderedLinks}
+      </div>
     )
-  });
+  };
 
-  return (
-    <div className="sticky top-0 overflow-y-scroll flex flex-col items-start">
-      {renderedLinks}
-    </div>
-  )
-};
+  export default Sidebar;
+  ```
+- ```jsx
+  // "./components/Link.js"
+  //...
+  const Link = ({ to, children, className, activeClassName }) => {
+    //...
+    const classes = classNames(
+      "text-blue-500",
+      className,
+      currentPath === to && activeClassName
+    );
+    //...
+  };
 
-export default Sidebar;
-```
-
-```jsx
-// "./components/Link.js"
-import classNames from "classnames";
-import useNavigation from "../hooks/use-navigation";
-
-const Link = ({ to, children, className, activeClassName }) => {
-  const { navigate, currentPath } = useNavigation();
-
-  const classes = classNames(
-    "text-blue-500",
-    className,
-    currentPath === to && activeClassName
-  );
-
-  const handleClick = (event) => {
-    if (event.metaKey || event.ctrlKey) {
-      return;
-    }
-    event.preventDefault();
-
-    navigate(to);
-  }
-
-  return (
-    <a className={classes} href={to} onClick={handleClick}>{children}</a>
-  );
-};
-
-export default Link;
-```
+  export default Link;
+  ```
