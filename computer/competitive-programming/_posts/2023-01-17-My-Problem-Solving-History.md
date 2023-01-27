@@ -16,8 +16,8 @@ Last Updated: 2023년 1월 25일.
 |:-|-:|-:|:-|:-:|:-|
 |Codeforces|536|108798|Newbie||Jan/10/2023|
 |AtCoder|1154|8984|5 Kyu||Jan/21/2023|
-|solved.ac|2255|625|Diamond V|Class 7|Jan/27/2023|
-|Backjoon||||solved 1259|Jan/27/2023|
+|solved.ac|2259|619|Diamond V|Class 7|Jan/27/2023|
+|Backjoon||||solved 1263|Jan/27/2023|
 
 ## 초기 정보
 
@@ -35,6 +35,30 @@ Last Updated: 2023년 1월 25일.
 ## 2023년 1월
 
 ### 넷째 주
+
+1월 28일.
+- [가위바위보](https://www.acmicpc.net/problem/2207)
+  - 난이도: Platinum 4
+  - 결과: 30min, 성공
+  - 시도: 1
+  - 평범한 2SAT 문제.
+- [아이돌(Idol)](https://www.acmicpc.net/problem/3648)
+  - 난이도: Platinum 3
+  - 결과: 1hr, 성공
+  - 시도: 4
+  - 2SAT 에서 특정 변수에 원하는 값을 대입할 수 있는지 확인하는 문제. 이 부분을 놓쳐서 계속 틀림. 문제를 잘 읽자...
+  - Clause(상근이 또는 상근이)를 하나 추가해서 깔끔하게 해결 가능.
+- [고속도로(Highway)](https://www.acmicpc.net/problem/10254)
+  - 난이도: Platinum 2
+  - 결과: 1hr, 성공
+  - 시도: 2
+  - 로테이팅 캘리퍼스. 처음 배우는 개념. 구현은 어렵지 않음.
+- [로버트 후드(Robert Hood)](https://www.acmicpc.net/problem/9240)
+  - 난이도: Platinum3
+  - 결과: 30min, 성공
+  - 시도: 4
+  - 로테이팅 캘리퍼스. [고속도로(Highway)](https://www.acmicpc.net/problem/10254)보다 쉬운 문제. 왜 틀렸는지 살펴보니 `abs(point - origin)`이 아니라 `abs(point)`로 해놓고 정렬했더라...
+
 
 1월 27일.
 - [Convex Hull](https://www.acmicpc.net/problem/4181)
