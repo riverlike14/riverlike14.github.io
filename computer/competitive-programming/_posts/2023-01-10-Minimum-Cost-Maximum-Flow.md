@@ -10,22 +10,22 @@ title: "[Competitive Programming] Minimum Cost Maximum Flow"
 using namespace std;
 
 const int INF = 1e9;
-const int N = 1000;
+const int LEN = 1000;
 
 class NetworkFlow {
 private:
     node source;
     node sink;
 
-    int capacity[N][N];
-    int flow[N][N];
+    int capacity[LEN][LEN];
+    int flow[LEN][LEN];
 
-    bool visited[N];
-    bool inqueue[N];
-    node previous[N];
-    vector<node> children[N];
-    int cost[N][N];
-    int min_cost[N];
+    bool visited[LEN];
+    bool inqueue[LEN];
+    node previous[LEN];
+    vector<node> children[LEN];
+    int cost[LEN][LEN];
+    int min_cost[LEN];
 
 public:
     void update_capacity(node a, node b, int current, int expense) {
@@ -40,14 +40,14 @@ public:
         source = a;
     }
 
-    void update_sink(node b) {
-        sink = b;
+    void update_sink(node a) {
+        sink = a;
     }
 
     void spfa(node inode) {
-        fill(visited, visited + N, false);
-        fill(min_cost, min_cost + N, INF);
-        fill(inqueue, inqueue + N, false);
+        fill(visited, visited + LEN, false);
+        fill(min_cost, min_cost + LEN, INF);
+        fill(inqueue, inqueue + LEN, false);
 
         min_cost[inode] = 0;
 
