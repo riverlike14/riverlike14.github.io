@@ -10,14 +10,14 @@ ID: riverlike14
 
 ## 현재 정보
 
-Last Updated: 2023년 1월 25일.
+Last Updated: 2023년 1월 31일.
 
 ||Rating|Rank|Level|etc.|Last Updated|
 |:-|-:|-:|:-|:-:|:-|
 |Codeforces|536|108798|Newbie||Jan/10/2023|
-|AtCoder|1154|8984|5 Kyu||Jan/21/2023|
-|solved.ac|2259|619|Diamond V|Class 7|Jan/27/2023|
-|Backjoon||||solved 1263|Jan/27/2023|
+|AtCoder|1129|9343|5 Kyu||Jan/31/2023|
+|solved.ac|2270|597|Diamond V|Class 7|Jan/31/2023|
+|Backjoon||||solved 1274|Jan/31/2023|
 
 ## 초기 정보
 
@@ -32,11 +32,64 @@ Last Updated: 2023년 1월 25일.
 
 # History
 
+## 2023년 2월
+
+### 첫째 주
+
+1월 31일.
+- [두부장수 장홍준 2](https://www.acmicpc.net/problem/11111)
+  - 난이도: Platinum 2
+  - 결과: 1hr 30min, 성공
+  - 시도: 5
+  - MCMF. 메모리 계산에서 실수가 있었음. 그리고 Cost와 Flow를 정의하는데에 시간이 오래 걸림. 매치가 안되는 두부를 어떻게 처리할 것인지 고민을 많이 했음.
+
+1월 30일.
+- [트리의 순회](https://www.acmicpc.net/problem/2263)
+  - 난이도: Gold 2
+  - 결과: 30min, 성공
+  - 시도: 3
+  - 포스트 오더의 맨 마지막이 루트 노드임을 이용. 인오더의 경우, 인덱스를 저장하면 루트 노드를 빨리 찾을 수 있음.
+- [달리기 코스](https://www.acmicpc.net/problem/1310)
+  - 난이도: Platinum 3
+  - 결과: 10min, 성공
+  - 시도: 1
+  - 로테이팅 캘리퍼스 연습문제.
+
 ## 2023년 1월
 
 ### 넷째 주
 
+1월 29일.
+- [경찰서](https://www.acmicpc.net/problem/1506)
+  - 난이도: Platinum 5
+  - 결과: 30min, 성공
+  - 시도: 1
+  - SCC로 묶고 SCC마다 경찰서를 짓는 데 드는 비용이 가장 작은 도시를 찾으면 됨.
+
 1월 28일.
+- [점 분리(Separate Points)](https://www.acmicpc.net/problem/3878)
+  - 난이도: Platinum 2
+  - 결과: 2hr, 성공
+  - 시도: 2
+  - 컨벡스 헐끼리 겹치는지 확인하는 문제. 구현이 오래걸림.
+- [맹독 방벽(Wall)](https://www.acmicpc.net/problem/7420)
+  - 난이도: Platinum 5
+  - 결과: 10min, 성공
+  - 시도: 1
+  - 컨벡스 헐을 감싸주면 됨.
+- [트리(Trees)](https://www.acmicpc.net/problem/4803)
+  - 난이도: Gold 4
+  - 결과: 10min, 성공
+  - 시도: 1
+  - 노드마다 부모 노드를 기록하면서 dfs.
+- [ABC 287](https://atcoder.jp/contests/abc287)
+  - 점수: 1000
+  - 등수: 2241 / 8342
+  - 퍼포먼스: 1004
+  - 레이팅 변화: 1154 &rarr; 1129
+  - C에서 살짝 말림. A, B, D는 그럭저럭 빨리 품. E를 막판에 제출했으면 어땠을까 하는 아쉬움이 매우 많이 남는다. ABC 끝나고 여유를 가지고 제출하니 바로 통과돼서 너무 아쉬움이 남음. F는 트리 DP인건 알겠으나 점화식을 못짜겠더라. G랑 Ex는 패스...
+
+1월 27일.
 - [가위바위보](https://www.acmicpc.net/problem/2207)
   - 난이도: Platinum 4
   - 결과: 30min, 성공
@@ -58,9 +111,18 @@ Last Updated: 2023년 1월 25일.
   - 결과: 30min, 성공
   - 시도: 4
   - 로테이팅 캘리퍼스. [고속도로(Highway)](https://www.acmicpc.net/problem/10254)보다 쉬운 문제. 왜 틀렸는지 살펴보니 `abs(point - origin)`이 아니라 `abs(point)`로 해놓고 정렬했더라...
+- [가장 먼 두 점](https://www.acmicpc.net/problem/2049)
+  - 난이도: Platinum 3
+  - 결과: 10min, 성공
+  - 시도: 2
+  - 로테이팅 캘리퍼스. 중복된 좌표들 처리할 것.
 
-
-1월 27일.
+1월 26일.
+- [Parcel](https://www.acmicpc.net/problem/16287)
+  - 난이도: Platinum 5
+  - 결과: 1hr, 성공
+  - 시도: 5
+  - Meet in the middle로 통과. DP로 짜면 40배정도 빨라짐. Meet in the middle로 짰더니 0.01초 차이로 아슬아슬하게 통과. 계속 TLE떠서 코드를 계속 들여다보는데도 딱히 이상한 점이 없어서 짜증만 났던 문제.
 - [Convex Hull](https://www.acmicpc.net/problem/4181)
   - 난이도: Platinum 5
   - 결과: 30min, 성공
@@ -76,13 +138,6 @@ Last Updated: 2023년 1월 25일.
   - 결과: 20min, 성공
   - 시도: 1
   - 평범한 MCMF 문제.
-
-1월 26일.
-- [Parcel](https://www.acmicpc.net/problem/16287)
-  - 난이도: Platinum 5
-  - 결과: 1hr, 성공
-  - 시도: 5
-  - Meet in the middle로 통과. DP로 짜면 40배정도 빨라짐. Meet in the middle로 짰더니 0.01초 차이로 아슬아슬하게 통과. 계속 TLE떠서 코드를 계속 들여다보는데도 딱히 이상한 점이 없어서 짜증만 났던 문제.
 
 1월 25일.
 - [가장 긴 증가하는 부분 수열 6](https://www.acmicpc.net/problem/17411)
@@ -255,3 +310,136 @@ Last Updated: 2023년 1월 25일.
   - 결과: 1hr, 실패.
   - 시도: 1
   - 스위핑, 세그먼트 트리. x좌표를 따라 움직이면서 y좌표에 지도가 있는지 없는지 확인. 테크닉 필요없는 깡세그.
+
+# Data Structure
+
+## Stack
+
+[오아시스 재결합(PATRIK)](https://www.acmicpc.net/problem/3015)
+- 스택에 사람들을 키순으로 저장.
+
+## Deque
+
+[최솟값 찾기](https://www.acmicpc.net/problem/11003)
+- 배열을 돌면서 덱 앞뒤로 최솟값의 후보를 제거 후 추가.
+
+## Union-Find
+
+[백조의 호수(labudovi)](https://www.acmicpc.net/problem/3197)
+- 구현이 귀찮은 DSU 문제. 경계 처리만 잘 해주면 됨.
+
+# String
+
+## KMP
+
+[찾기](https://www.acmicpc.net/problem/1786)
+- KMP 구현 연습문제. 외우자.
+
+# Tree
+
+## Least Common Ancestor
+
+[도로 네트워크(lubenica)](https://www.acmicpc.net/problem/3176)
+- LCA 구현할 때 희소배열에 간선들의 최댓값과 최솟값도 같이 저장.
+
+# Segment Tree
+
+[북서풍(North-Western Winds)](https://www.acmicpc.net/problem/5419)
+- 스위핑. 지도에 섬을 하나씩 채워넣으면서 섬마다 북서풍을 타고 이동 가능한 섬의 개수 계산.
+
+[공장](https://www.acmicpc.net/problem/7578)
+- LIS 를 구하는 방식으로 세그먼트 트리 응용.
+- 머지소트로도 해결 가능.
+
+[여우가 정보섬에 올라온 이유](https://www.acmicpc.net/problem/17131)
+- 스위핑. 세그먼트 트리와 스위핑 연습 문제. 별을 하나씩 채워넣으면서 V형 별자리를 만들 수 있는 경우 계산. 별이 중복되는 경우 주의.
+
+## Merge Sort Tree
+
+[수열과 쿼리 1](https://www.acmicpc.net/problem/13537)
+- 머지소트 트리 + `upper_bound()`.
+
+[수열과 쿼리 3](https://www.acmicpc.net/problem/13544)
+- [수열과 쿼리 1](https://www.acmicpc.net/problem/13537)과 동일. 머지소트 트리 + `upper_bound()`.
+
+# Maximum Flow
+
+## Bipartite Matching
+
+[소수 쌍](https://www.acmicpc.net/problem/1017)
+- $1$과의 합이 소수가 되는 수를 $1$과 한 번씩 짝 지어준 다음 이분매칭.
+
+[노트북의 주인을 찾아서](https://www.acmicpc.net/problem/1298)
+- 이분매칭 연습문제.
+
+[상어의 저녁식사](https://www.acmicpc.net/problem/1671)
+- 한 상어당 최대 2마리까지 먹을 수 있으므로 상어 노드 복사 후 이분매칭.
+
+[축사 배정](https://www.acmicpc.net/problem/2188)
+- 이분매칭 연습문제.
+
+[열혈강호](https://www.acmicpc.net/problem/11375)
+- 이분매칭 연습문제.
+
+[책 구매하기 2](https://www.acmicpc.net/problem/11406)
+- 이분매칭 연습문제.
+
+[열혈강호 2](https://www.acmicpc.net/problem/11376)
+- 직원 노드를 복사한 다음 $2N$명의 직원에 대해 이분매칭.
+
+## Maximum Flow
+
+[도시 왕복하기 2](https://www.acmicpc.net/problem/2316)
+- 정점 분할. 각 도시별로 $in$노드와 $out$노드를 만들고 둘 사이의 용량은 $1$.
+
+[열혈강호 3](https://www.acmicpc.net/problem/11377)
+- 그래프 모양을 잘 잡아주면 되는 문제.
+- 아니면 직원 노드를 복사하고 복사된 직원 $N$명 중 최대 $K$명만 일을 할 수 있게 이분매칭.
+
+[열혈강호 4](https://www.acmicpc.net/problem/11378)
+- [열혈강호 3](https://www.acmicpc.net/problem/11377)을 플로우로 풀었으면 날먹.
+- 직원별로 최대 유량을 설정해주면 해결. 쉬움.
+
+[Jerry and Tom](https://www.acmicpc.net/problem/14750)
+- 쥐들이 각 구멍으로 도망갈 수 있는지 판단하기가 귀찮음. 이것만 해결하면 그냥 쉬운 플로우 문제.
+
+[도시 왕복하기 1](https://www.acmicpc.net/problem/17412)
+- 도시를 잇는 경로의 용량을 $1$로 두고 최대 유량 계산.
+
+## Minimum Cost Maximum Flow
+
+[책 구매하기](https://www.acmicpc.net/problem/11405)
+- 최소비용 최대유량 연습문제.
+
+[열혈강호 5](https://www.acmicpc.net/problem/11408)
+- 최소비용 최대유량 연습문제.
+
+[열혈강호 6](https://www.acmicpc.net/problem/11409)
+- SPFA가 음수 가중치를 갖는 간선에도 통한다는 사실을 아는지 확인하는 문제.
+- [열혈강호 5](https://www.acmicpc.net/problem/11408)에서 비용만 부호를 바꿔주면 됨.
+
+[동전 교환(Coin Swap)](https://www.acmicpc.net/problem/11493)
+- 심플한 MCMF 문젠데 구현이 귀찮음.
+- 매치가 안된 검은색 동전만 고려해야 시간이 오래 안걸림.
+
+# Math
+
+## Fast Fourier Transform
+
+[이동](https://www.acmicpc.net/problem/1067)
+- FFT 연습문제.
+
+[RNG](https://www.acmicpc.net/problem/13725)
+- 키타마사 연습문제. 열심히 구현하면 됨.
+
+[Telescope](https://www.acmicpc.net/problem/14756)
+- 한 줄로 길게 늘어뜨리면 convolution 한 번에 해결 가능.
+
+[블록 4](https://www.acmicpc.net/problem/15572)
+- 키타마사 연습문제. 점화식을 잘 세우면 됨.
+
+[다항식과 쿼리 2](https://www.acmicpc.net/problem/18354)
+- CZT 구현 문제. [참고](https://cp-algorithms.com/algebra/polynomial.html#chirp-z-transform).
+
+[궁금한 시프트](https://www.acmicpc.net/problem/25456)
+- FFT 연습문제. 쉬움.

@@ -10,15 +10,15 @@ using namespace std;
 
 typedef int node;
 
-const int len = 500;
+const int LEN = 500;
 
 class BipartiteMatch {
 private:
-    bool insource[len];
+    bool insource[LEN];
     vector<node> source;
-    vector<node> children[len];
-    bool visited[len];
-    int match[len];
+    vector<node> children[LEN];
+    bool visited[LEN];
+    int match[LEN];
 
 public:
     void update_match(node a, node b) {
@@ -44,11 +44,11 @@ public:
     }
 
     int max_match() {
-        fill(match, match + len, -1);
+        fill(match, match + LEN, -1);
 
         int ans = 0;
         for (auto inode: source) {
-            fill(visited, visited + len, false);
+            fill(visited, visited + LEN, false);
             ans += dfs(inode);
         }
 

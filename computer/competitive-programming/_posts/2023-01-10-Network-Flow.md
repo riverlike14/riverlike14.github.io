@@ -10,18 +10,18 @@ title: "[Competitive Programming] Network Flow"
 using namespace std;
 
 const int INF = 1e9;
-const int N = 5000;
+const int LEN = 5000;
 
 class NetworkFlow {
 private:
     node source;
     node sink;
 
-    bool visited[N];
-    node previous[N];
-    int flow[N][N];
-    int capacity[N][N];
-    vector<node> children[N];
+    bool visited[LEN];
+    node previous[LEN];
+    int flow[LEN][LEN];
+    int capacity[LEN][LEN];
+    vector<node> children[LEN];
 
 public:
     void update_capacity(node a, node b, int num) {
