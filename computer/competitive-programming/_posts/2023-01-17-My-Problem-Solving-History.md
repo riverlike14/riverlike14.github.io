@@ -36,6 +36,28 @@ Last Updated: 2023년 1월 31일.
 
 ### 첫째 주
 
+2월 1일.
+- [광고](https://www.acmicpc.net/problem/1305)
+  - 난이도: Platinum 4
+  - 결과: 20min, 성공
+  - 시도: 2
+  - KMP. pi배열을 잘 이해하고 있는지 묻는 문제.
+- [Cubeditor(Editor)](https://www.acmicpc.net/problem/1701)
+  - 난이도: Gold 3
+  - 결과: 15min, 성공
+  - 시도: 2
+  - KMP. 모든 substr에 대해 pi배열을 만들어 줌.
+- [문자열 제곱(Power Strings)](https://www.acmicpc.net/problem/4354)
+  - 난이도: Platinum 5
+  - 결과: 15min, 성공
+  - 시도: 2
+  - KMP. s 문자열의 길이는 a 문자열의 길이로 나누어 떨어져야 함.
+- [시계 사진들(Clock Pictures)](https://www.acmicpc.net/problem/10266)
+  - 난이도: Platinum 4
+  - 결과: 25min, 성공
+  - 시도: 1
+  - KMP. KMP로 이런 문제도 풀 수 있다는 게 신기.
+
 1월 31일.
 - [두부장수 장홍준 2](https://www.acmicpc.net/problem/11111)
   - 난이도: Platinum 2
