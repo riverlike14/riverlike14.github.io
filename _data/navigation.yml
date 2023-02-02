@@ -1,6 +1,6 @@
 # main links
 main:
-  - title: "Quick-Start Guide"
+  - title: "Minimal Mistakes Guide"
     url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
   # - title: "About"
   #   url: https://mmistakes.github.io/minimal-mistakes/about/
@@ -10,3 +10,22 @@ main:
   #   url: /collection-archive/
   # - title: "Sitemap"
   #   url: /sitemap/
+
+sidebar-category:
+  - title: "Web Development"
+    children:
+      - title: "React"
+        url: "/category/react"
+        category: "react"
+      - title: "Typescript"
+        url: "/category/typescript"
+        category: "typescript"
+      - title: "Operating System"
+        url: "/category/operating-system"
+        category: "operating-system"
+      - title: "Network"
+        url: "/category/network"
+        category: "network"
+      - title: "Computer Architecture"
+        url: "/category/computer-architecture"
+        category: "computer-architecture"
