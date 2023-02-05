@@ -14,10 +14,10 @@ Last Updated: 2023년 1월 31일.
 
 ||Rating|Rank|Level|etc.|Last Updated|
 |:-|-:|-:|:-|:-:|:-|
-|Codeforces|536|108798|Newbie||Jan/10/2023|
-|AtCoder|1129|9343|5 Kyu||Jan/31/2023|
-|solved.ac|2270|597|Diamond V|Class 7|Jan/31/2023|
-|Backjoon||||solved 1274|Jan/31/2023|
+|[Codeforces](https://codeforces.com/profile/riverlike14)|536|108798|Newbie||Jan/10/2023|
+|[AtCoder](https://atcoder.jp/users/riverlike14)|1245|7561|4 Kyu||Feb/5/2023|
+|[solved.ac](https://solved.ac/profile/riverlike14)|2275|590|Diamond V|Class 7|Feb/5/2023|
+|[Backjoon](https://www.acmicpc.net/user/riverlike14)||||solved 1289|Feb/5/2023|
 
 ## 초기 정보
 
@@ -35,6 +35,80 @@ Last Updated: 2023년 1월 31일.
 ## 2023년 2월
 
 ### 첫째 주
+
+2월 5일.
+
+2월 4일.
+- [ATM](https://www.acmicpc.net/problem/4013)
+  - 난이도: Platinum 2
+  - 결과: 실패
+  - 시도: 4
+  - SCC마다 방문했을 때 인출 가능한 총 금액, 레스토랑 입점 여부를 체크하고 위상 정렬된 그래프에서 다시 계산. 위상 정렬된 그래프에서 계산이 잘 안됨.
+- [회사 문화 2](https://www.acmicpc.net/problem/14268)
+  - 난이도: Platinum 3
+  - 결과: 성공
+  - 시도: 1
+  - 오일러 투어 테크닉과 세그먼트 트리의 조화를 확인할 수 있는 문제.
+- [회사 문화 3](https://www.acmicpc.net/problem/14287)
+  - 난이도: Platinum 3
+  - 결과: 성공
+  - 시도: 1
+  - 세그먼트 트리의 각 요소를 어떻게 정의할 지, 그리고 직원마다 자신이 얼마나 칭찬을 받았는지 알고 싶으면 어떤 연산을 해야 하는지 고민.
+- [회사 문화 4](https://www.acmicpc.net/problem/14288)
+  - 난이도: Platinum 3
+  - 결과: 성공
+  - 시도: 1
+  - 회사 문화 2, 3을 합쳐서 구현하자.
+- [주식회사 승범이네](https://www.acmicpc.net/problem/16404)
+  - 난이도: Platinum 3
+  - 결과: 성공
+  - 시도: 1
+  - 회사 문화 2랑 똑같은데 이번엔 루트 노드의 영향도 있음.
+- [성대나라의 물탱크](https://www.acmicpc.net/problem/18227)
+  - 난이도: Platinum 3
+  - 결과: 성공
+  - 시도: 1
+  - 회사 문화 3이랑 똑같은데 약간의 관찰이 더 필요.
+- [ABC 288](https://atcoder.jp/contests/abc288)
+  - 점수: 1100
+  - 등수: 623 / 8923
+  - 퍼포먼스: 1791
+  - 레이팅 변화: 1129 &rarr; 1245
+  - 끝나기 전까지는 걍 또 망했다 싶었는데, 난이도가 어려운 ABC였음. F를 버저비터 성공한게 큰 듯. 특히 D는 아이디어는 찾았는데 구현하다가 시간이 너무 많이 뺐겨서 우선 넘기고 E랑 F를 살펴본게 적중. 아이디어대로 구현하는 연습이 필요한 것 같다. D를 못풀어서 아쉬운 마음과 민트를 달아서 기쁜 마음이 공존하는 어질어질한 상태.
+
+2월 3일.
+- [축구 전술(Field Plan)](https://www.acmicpc.net/problem/3977)
+  - 난이도: Platinum 4
+  - 결과: 성공
+  - 시도: 2
+  - 개행 두 번 안해서 한 번 실패... SCC를 위상정렬 한 다음 첫 번째 SCC에서 나머지 모든 노드로 이동 가능한지 확인.
+- [큰 수 만들기](https://www.acmicpc.net/problem/16496)
+  - 난이도: Platinum 5
+  - 결과: 성공
+  - 시도: 2
+  - 0은 하나만 출력해야 하는데 예외처리 제대로 안해서 한 번 실패... 문자열의 정렬 기준만 찾으면 해결되는 문제.
+
+2월 2일.
+- [타일 채우기 2](https://www.acmicpc.net/problem/13976)
+  - 난이도: Platinum 5
+  - 결과: 성공
+  - 시도: 2
+  - 점화식을 세우고 거듭제곱을 빠르게 계산하는 문제. 선형점화식 계수에 음수를 넣는 바람에 한 번 틀림.
+- [문자열 폭발(EKSPLOZIJA)](https://www.acmicpc.net/problem/9935)
+  - 난이도: Gold 4
+  - 결과: 성공
+  - 시도: 4
+  - 스택에 어떤 정보를 넣을 것인지 고민이 필요. 이것만 찾으면 풀리는 문제인데 생각이 잘 안났었음.
+- [행성 터널(SVEMIR)](https://www.acmicpc.net/problem/2887)
+  - 난이도: Platinum 5
+  - 결과: 성공
+  - 시도: 1
+  - MST인데 MST를 만들 때 불필요한 간선을 처음부터 거르고 시작하는 아이디어. 어떻게 걸러낼 지 고민하는 문제.
+- [다각형 게임](https://www.acmicpc.net/problem/13034)
+  - 난이도: Platinum 3
+  - 결과: 실패
+  - 시도: 1
+  - 평범한 DP 문제인줄 알고 시도했다가 바로 실패. 스프라그-그런디 정리가 필요하다는데 모르는 상태로 풀 수 있을까? 그냥 개념을 빨리 배우자...
 
 2월 1일.
 - [광고](https://www.acmicpc.net/problem/1305)
@@ -333,38 +407,40 @@ Last Updated: 2023년 1월 31일.
   - 시도: 1
   - 스위핑, 세그먼트 트리. x좌표를 따라 움직이면서 y좌표에 지도가 있는지 없는지 확인. 테크닉 필요없는 깡세그.
 
-# Data Structure
+# Problems
 
-## Stack
+## Data Structure
+
+### Stack
 
 [오아시스 재결합(PATRIK)](https://www.acmicpc.net/problem/3015)
 - 스택에 사람들을 키순으로 저장.
 
-## Deque
+### Deque
 
 [최솟값 찾기](https://www.acmicpc.net/problem/11003)
 - 배열을 돌면서 덱 앞뒤로 최솟값의 후보를 제거 후 추가.
 
-## Union-Find
+### Union-Find
 
 [백조의 호수(labudovi)](https://www.acmicpc.net/problem/3197)
 - 구현이 귀찮은 DSU 문제. 경계 처리만 잘 해주면 됨.
 
-# String
+## String
 
-## KMP
+### KMP
 
 [찾기](https://www.acmicpc.net/problem/1786)
 - KMP 구현 연습문제. 외우자.
 
-# Tree
+## Tree
 
-## Least Common Ancestor
+### Least Common Ancestor
 
 [도로 네트워크(lubenica)](https://www.acmicpc.net/problem/3176)
 - LCA 구현할 때 희소배열에 간선들의 최댓값과 최솟값도 같이 저장.
 
-# Segment Tree
+## Segment Tree
 
 [북서풍(North-Western Winds)](https://www.acmicpc.net/problem/5419)
 - 스위핑. 지도에 섬을 하나씩 채워넣으면서 섬마다 북서풍을 타고 이동 가능한 섬의 개수 계산.
@@ -376,7 +452,7 @@ Last Updated: 2023년 1월 31일.
 [여우가 정보섬에 올라온 이유](https://www.acmicpc.net/problem/17131)
 - 스위핑. 세그먼트 트리와 스위핑 연습 문제. 별을 하나씩 채워넣으면서 V형 별자리를 만들 수 있는 경우 계산. 별이 중복되는 경우 주의.
 
-## Merge Sort Tree
+### Merge Sort Tree
 
 [수열과 쿼리 1](https://www.acmicpc.net/problem/13537)
 - 머지소트 트리 + `upper_bound()`.
@@ -384,9 +460,9 @@ Last Updated: 2023년 1월 31일.
 [수열과 쿼리 3](https://www.acmicpc.net/problem/13544)
 - [수열과 쿼리 1](https://www.acmicpc.net/problem/13537)과 동일. 머지소트 트리 + `upper_bound()`.
 
-# Maximum Flow
+## Network Flow
 
-## Bipartite Matching
+### Bipartite Matching
 
 [소수 쌍](https://www.acmicpc.net/problem/1017)
 - $1$과의 합이 소수가 되는 수를 $1$과 한 번씩 짝 지어준 다음 이분매칭.
@@ -409,7 +485,7 @@ Last Updated: 2023년 1월 31일.
 [열혈강호 2](https://www.acmicpc.net/problem/11376)
 - 직원 노드를 복사한 다음 $2N$명의 직원에 대해 이분매칭.
 
-## Maximum Flow
+### Maximum Flow
 
 [도시 왕복하기 2](https://www.acmicpc.net/problem/2316)
 - 정점 분할. 각 도시별로 $in$노드와 $out$노드를 만들고 둘 사이의 용량은 $1$.
@@ -428,7 +504,7 @@ Last Updated: 2023년 1월 31일.
 [도시 왕복하기 1](https://www.acmicpc.net/problem/17412)
 - 도시를 잇는 경로의 용량을 $1$로 두고 최대 유량 계산.
 
-## Minimum Cost Maximum Flow
+### Minimum Cost Maximum Flow
 
 [책 구매하기](https://www.acmicpc.net/problem/11405)
 - 최소비용 최대유량 연습문제.
@@ -444,9 +520,9 @@ Last Updated: 2023년 1월 31일.
 - 심플한 MCMF 문젠데 구현이 귀찮음.
 - 매치가 안된 검은색 동전만 고려해야 시간이 오래 안걸림.
 
-# Math
+## Math
 
-## Fast Fourier Transform
+### Fast Fourier Transform
 
 [이동](https://www.acmicpc.net/problem/1067)
 - FFT 연습문제.
