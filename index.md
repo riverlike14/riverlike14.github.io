@@ -2,122 +2,59 @@
 layout: default
 ---
 
-Text can be **bold**, _italic_, or ~~strikethrough~~.
+Hi!
 
-[Link to another page](./another-page.html).
-
-There should be whitespace between paragraphs.
-
-There should be whitespace between paragraphs. We recommend including a README, or a file with information about your project.
-
-# Header 1
-
-This is a normal paragraph following a header. GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere.
-
-## Header 2
-
-> This is a blockquote following a header.
->
-> When something is important enough, you do it even if the odds are not in your favor.
-
-### Header 3
-
-```js
-// Javascript code with syntax highlighting.
-var fun = function lang(l) {
-  dateformat.i18n = require('./lang/' + l)
-  return true;
-}
-```
-
-```ruby
-# Ruby code with syntax highlighting
-GitHubPages::Dependencies.gems.each do |gem, version|
-  s.add_dependency(gem, "= #{version}")
-end
-```
-
-#### Header 4
-
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-
-##### Header 5
-
-1.  This is an ordered list following a header.
-2.  This is an ordered list following a header.
-3.  This is an ordered list following a header.
-
-###### Header 6
-
-| head1        | head two          | three |
-|:-------------|:------------------|:------|
-| ok           | good swedish fish | nice  |
-| out of stock | good and plenty   | nice  |
-| ok           | good `oreos`      | hmm   |
-| ok           | good `zoute` drop | yumm  |
-
-### There's a horizontal rule below this.
-
-* * *
-
-### Here is an unordered list:
-
-*   Item foo
-*   Item bar
-*   Item baz
-*   Item zip
-
-### And an ordered list:
-
-1.  Item one
-1.  Item two
-1.  Item three
-1.  Item four
-
-### And a nested list:
-
-- level 1 item
-  - level 2 item
-  - level 2 item
-    - level 3 item
-    - level 3 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-
-### Small image
-
-![Octocat](https://github.githubassets.com/images/icons/emoji/octocat.png)
-
-### Large image
-
-![Branching](https://guides.github.com/activities/hello-world/branching.png)
+- [riverlike14@gmail.com](mailto:riverlike14@gmail.com)
+- [https://github.com/riverlike14](https://github.com/riverlike14)
+- Seoul, South Korea
 
 
-### Definition lists can be used with HTML syntax.
+# EXPERIENCE
 
-<dl>
-<dt>Name</dt>
-<dd>Godzilla</dd>
-<dt>Born</dt>
-<dd>1952</dd>
-<dt>Birthplace</dt>
-<dd>Japan</dd>
-<dt>Color</dt>
-<dd>Green</dd>
-</dl>
+**iOS Software Engineer \| MagicX Korea**
+- April 2023 ~ April 2024
+- Implemented a real-time scheduler, note, and comment system that are shared by multiple users.
+- Built a CD pipeline with Github Actions and deployed test verions every day.
+- Managed the overall application architecture.
+- Built a Network Manager that handles user data with GraphQL.
+- Implemented user signing-in process.
 
-```
-Long, single-line code blocks should not wrap. They should horizontally scroll if they are too long. This line should be long enough to demonstrate this.
-```
+**Military Service**
+- January 2015 ~ October 2016
 
-```
-The final element.
-```
+# EDUCATION
+
+**M.A. in Economics \| Seoul National University**
+- March 2020 ~ August 2020
+
+**B.S. in Mathematical Sciences \| Seoul National University**
+- March 2013 ~ February 2020
+- Combined Minor in Financial Mathematics
+
+**Big Data & Fintech Expert Training Course \| Seoul National University**
+  - January 2018 ~ July 2018
+  - Studied data science, especially machine learning and deep learning.
+
+# LICENSE & CERTIFICATION
+
+**Financial Risk Manager \| Global Association of Risk Professionals**
+- May 2024
+- Part 1 passed, Part 2 candidate.
+
+# AWARD
+
+**Top Prize in Problem Solving \| Korea Cryptography Forum**
+- June 2018
+
+**Top Prize \| MK Test of Economic & Strategic Business Thinking**
+- May 2016
+
+# PROGRAMMING
+
+- C++, Python, R, SQL
+
+# ETC
+
+- English: Fluent
+- Korean: Native
+
