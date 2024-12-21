@@ -25,7 +25,7 @@ Hi!
 # EDUCATION
 
 **M.A. in Economics \| Seoul National University**
-- March 2020 ~ August 2020
+- March 2020 ~ August 2022
 
 **B.S. in Mathematical Sciences \| Seoul National University**
 - March 2013 ~ February 2020
