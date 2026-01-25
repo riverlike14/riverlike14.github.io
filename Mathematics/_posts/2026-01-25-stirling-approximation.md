@@ -8,12 +8,12 @@ math: true
 # Statement
 
 $$
-n! \sim \sqrt{2 \pi n} \left( \frac{n}{e} \right)^{n}
+n! \sim \sqrt{2 \pi n} \left( \frac{n}{e} \right)^{n}.
 $$
 
 # Proof
 
-## Asymptotic behavior of $\log (n!)$
+## Asymptotic behavior of $n!$
 
 1. Using monotonicity of $$\log x$$, we have
 
@@ -27,9 +27,7 @@ $$
    n \log n - n + 1 \leq \log (n!) \leq (n + 1) \log n - n + 1.
    $$
 
-2. Define $d_n = \log (n!) - ((n + \frac{1}{2} ) \log n - n + 1)$.
-
-   Then
+2. Define $d_n = \log (n!) - ((n + \frac{1}{2} ) \log n - n + 1)$. Then
 
    $$
    \begin{align*}
@@ -41,7 +39,7 @@ $$
    $$
 
 3. The right-hand side is positive and bounded by $\sum_k \frac{1}{3(2n + 1)^{2k}} = \frac{1}{12n(n+1)}$. Hence,
-   - $$\{d_n\}$$ is decreating,
+   - $$\{d_n\}$$ is decreasing,
    - $$\left\{d_n - \frac{1}{12 n}\right\}$$ is increasing.
 
    Therefore the sequence $$\{ d_n \}$$ converges to some constant $d$, and
@@ -50,15 +48,15 @@ $$
    n! \sim e^{d+1} \sqrt{n} \left(\frac{n}{e} \right)^n.
    $$
 
-## Wallis's formula
+## Wallis' formula
 
-1. Wallis's formula gives
+1. Wallis' formula gives
 
    $$
    \lim_{n \to \infty} \frac{1}{\sqrt{n}} \frac{(2n)!!}{(2n - 1)!!} = \sqrt{\pi}.
    $$
 
-2. Using $$(2n)!! = 2^n n!$$ and $$ (2n-1)!! = \frac{(2n)!}{2^n n!} $$,
+2. Using $$(2n)!! = 2^n n!$$ and $$ (2n-1)!! = \frac{(2n)!}{2^n n!} $$, we have
 
    $$
    \begin{align*}
