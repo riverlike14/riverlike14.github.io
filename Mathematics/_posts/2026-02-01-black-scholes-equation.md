@@ -25,13 +25,13 @@ $$
 
 Consider a self-financing portfolio $\Pi$ consisting of
 
-- a long position in one derivative, and
+- a long position in one derivative whose value is $V = V(S_t, t)$, and
 - a short position in $\Delta = \frac{\partial V}{\partial S}$ shares of the stock.
 
 The portfolio value is
 
 $$
-\Pi = V - \frac{\partial V}{\partial S} S.
+\Pi = V - \Delta S.
 $$
 
 ## Ito's lemma
