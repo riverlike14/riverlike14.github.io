@@ -5,15 +5,15 @@ tags: [black scholes equation] # TAG names should always be lowercase
 math: true
 ---
 
-# Statement
+## Statement
 
 $$
 \frac{\partial V}{\partial t} + r S \frac{\partial V}{\partial S} + \frac{1}{2} \sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} - rV = 0.
 $$
 
-# Assumptions
+## Assumptions
 
-## Stock price dynamics
+### Stock price dynamics
 
 The underlying stock follows a geometric Brownian motion:
 
@@ -21,7 +21,7 @@ $$
 dS = \mu S dt + \sigma S dW.
 $$
 
-## Self-financing portfolio
+### Self-financing portfolio
 
 Consider a self-financing portfolio $\Pi$ consisting of
 
@@ -34,7 +34,7 @@ $$
 \Pi = V - \Delta S.
 $$
 
-## Ito's lemma
+### Ito's lemma
 
 Applying Ito's lemma to $V(S,t)$, we have
 
@@ -47,7 +47,7 @@ $$
 
 Therefore the portfolio is risk-free.
 
-## No-arbitrage condition
+### No-arbitrage condition
 
 The portfolio must earn the risk-free rate $r$:
 
