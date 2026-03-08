@@ -5,15 +5,15 @@ tags: [stirling approximation] # TAG names should always be lowercase
 math: true
 ---
 
-# Statement
+## Statement
 
 $$
 n! \sim \sqrt{2 \pi n} \left( \frac{n}{e} \right)^{n}.
 $$
 
-# Proof
+## Proof
 
-## Asymptotic behavior of $n!$
+### Asymptotic behavior of $n!$
 
 1. Using monotonicity of $$\log x$$, we have
 
@@ -48,7 +48,7 @@ $$
    n! \sim e^{d+1} \sqrt{n} \left(\frac{n}{e} \right)^n.
    $$
 
-## Wallis' formula
+### Wallis' formula
 
 1. Wallis' formula gives
 

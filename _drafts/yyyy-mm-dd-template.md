@@ -5,4 +5,4 @@ tags: [centroid decomposition, tree] # TAG names should always be lowercase
 math: true
 ---
 
-# Description
+## Statement
