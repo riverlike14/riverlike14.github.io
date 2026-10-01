@@ -26,6 +26,9 @@ math: true
   - If bid > value + margin, sell the options.
   - If ask < value - margin, buy the options.
 
-## 2026-09-29
+## Working Log
 
-- Minor fixes (refactoring, renaming)
+| Date       | Task          | Details                                             |
+| ---------- | ------------- | --------------------------------------------------- |
+| 2026-09-30 | Minor updates | Remove hard-coded values, update configuration file |
+| 2026-09-28 | Minor updates | Rename some variables                               |
